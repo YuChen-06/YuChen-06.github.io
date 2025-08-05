@@ -6,9 +6,15 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
+    "deploy": "npm run build && gh-pages -d docs",
+    "postbuild": "echo 'Build complete. You can now push the /docs folder to GitHub Pages.'",
     "astro": "astro"
   },
   "dependencies": {
     "astro": "^5.12.8"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.3.0",
+    "wrangler": "^4.27.0"
   }
 }
