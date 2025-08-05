@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const allPosts = await Astro.glob('../posts/*.md');
+  
+  const uniqueTags = [...new Set(allPosts.map((post) => post.frontmatter.tags).flat())];
+
+  return uniqueTags.map((tag) => {
+    const filteredPosts = allPosts.filter((post) => post.frontmatter.tags.includes(tag));
+    return {
+      params: { tag },
+      props: { posts: filteredPosts },
+    };
+  });
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<BaseLayout pageTitle={`标签：${tag}`}>
+  <h1>标签：#{tag}</h1>
+  <p>以下是标记为 "{tag}" 的所有文章：</p>
+  
+  <div class="posts">
+    {posts.map((post) => (
+      <article class="post-preview">
+        <h2><a href={post.url}>{post.frontmatter.title}</a></h2>
+        <p class="meta">
+          发布于 {post.frontmatter.pubDate.slice(0, 10)} | 作者：{post.frontmatter.author}
+        </p>
+        <p>{post.frontmatter.description}</p>
+        {post.frontmatter.tags && (
+          <div class="tags">
+            {post.frontmatter.tags.map((postTag) => (
+              <a href={`/tags/${postTag}/`} class="tag">#{postTag}</a>
+            ))}
+          </div>
+        )}
+      </article>
+    ))}
+  </div>
+  
+  <p><a href="/blog/">← 返回博客</a></p>
+</BaseLayout>
+
+<style>
+  .posts {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .post-preview {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 1.5rem;
+    background: #fafafa;
+  }
+  
+  .post-preview h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+  }
+  
+  .post-preview h2 a {
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .post-preview h2 a:hover {
+    color: #0066cc;
+  }
+  
+  .meta {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+  
+  .tag {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    text-decoration: none;
+  }
+  
+  .tag:hover {
+    background-color: #d0d0d0;
+  }
+</style>

@@ -1,0 +1,74 @@
+---
+import Navigation from "./Navigation.astro";
+import ThemeToggle from "./ThemeToggle.astro";
+---
+
+<header>
+  <div class="header-content">
+    <div class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <Navigation />
+    <ThemeToggle />
+  </div>
+</header>
+
+<style>
+  header {
+    margin: 0em 0 2em;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  .hamburger {
+    padding-right: 20px;
+    cursor: pointer;
+  }
+
+  .hamburger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    margin: 5px auto;
+    background-color: var(--text-color);
+    transition: 0.3s;
+  }
+
+  .hamburger.expanded span:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+  }
+
+  .hamburger.expanded span:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.expanded span:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+  }
+
+  @media screen and (min-width: 636px) {
+    .hamburger {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  const hamburger = document.querySelector(".hamburger");
+  if (hamburger) {
+    hamburger.addEventListener("click", () => {
+      hamburger.classList.toggle("expanded");
+    });
+  }
+</script>

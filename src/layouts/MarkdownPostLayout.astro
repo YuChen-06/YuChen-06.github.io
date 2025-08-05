@@ -1,0 +1,111 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+
+const { frontmatter } = Astro.props;
+---
+
+<BaseLayout pageTitle={frontmatter.title}>
+  <article>
+    <header>
+      <h1>{frontmatter.title}</h1>
+      <p class="meta">
+        发布于 {frontmatter.pubDate.slice(0, 10)} | 作者：{frontmatter.author}
+      </p>
+      {
+        frontmatter.image && (
+          <img src={frontmatter.image.url} alt={frontmatter.image.alt} />
+        )
+      }
+      {
+        frontmatter.tags && (
+          <div class="tags">
+            {frontmatter.tags.map((tag) => (
+              <a href={`/tags/${tag}/`} class="tag">
+                #{tag}
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    <div class="content">
+      <slot />
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  article {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 1rem;
+  }
+
+  h1 {
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+
+  .meta {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 1rem;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1rem 0;
+  }
+
+  .tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+  }
+
+  .tag {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    text-decoration: none;
+  }
+
+  .tag:hover {
+    background-color: #e0e0e0;
+  }
+
+  .content {
+    line-height: 1.6;
+  }
+
+  .content h2 {
+    color: #444;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .content p {
+    margin-bottom: 1rem;
+  }
+
+  .content ul,
+  .content ol {
+    margin-bottom: 1rem;
+    padding-left: 2rem;
+  }
+
+  .content li {
+    margin-bottom: 0.5rem;
+  }
+</style>

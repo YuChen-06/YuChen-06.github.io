@@ -1,0 +1,70 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const allPosts = await Astro.glob('../posts/*.md');
+const tags = [...new Set(allPosts.map((post) => post.frontmatter.tags).flat())];
+
+// 计算每个标签的文章数量
+const tagCounts = {};
+allPosts.forEach((post) => {
+  post.frontmatter.tags.forEach((tag) => {
+    tagCounts[tag] = (tagCounts[tag] || 0) + 1;
+  });
+});
+---
+
+<BaseLayout pageTitle="标签索引">
+  <h1>标签索引</h1>
+  <p>点击标签查看相关文章：</p>
+  
+  <div class="tag-cloud">
+    {tags.map((tag) => (
+      <a href={`/tags/${tag}/`} class="tag">
+        #{tag} ({tagCounts[tag]})
+      </a>
+    ))}
+  </div>
+  
+  <p><a href="/blog/">← 返回博客</a></p>
+</BaseLayout>
+
+<style>
+  .tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  
+  .tag {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .tag:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .tag:nth-child(2n) {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  }
+  
+  .tag:nth-child(3n) {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+  }
+  
+  .tag:nth-child(4n) {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+  }
+  
+  .tag:nth-child(5n) {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+  }
+</style>
