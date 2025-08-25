@@ -1,0 +1,234 @@
+/* 统一的玻璃效果容器样式 */
+
+/* 简化的主要内容容器 */
+.glass-container {
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-radius: 1rem;
+  padding: 2rem;
+  margin: 0 auto 2rem auto;
+  transition: all 0.3s ease;
+  box-shadow: none;
+
+  /* 设置宽度为视窗宽度的65% */
+  width: 65vw;
+  max-width: 65vw;
+  box-sizing: border-box;
+}
+
+html.dark .glass-container {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+/* 简化的卡片样式容器 */
+.glass-card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 1rem;
+  padding: 2rem;
+  transition: all 0.3s ease;
+  transform: translateY(0);
+  position: relative;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+html.dark .glass-card {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+
+.glass-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+html.dark .glass-card:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* 简化的标签样式 */
+.glass-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.8rem;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  color: var(--text-color);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  user-select: none;
+}
+
+html.dark .glass-tag {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.glass-tag:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+html.dark .glass-tag:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 特殊的星光边框标签（参考thing.md） */
+.star-border-tag {
+  position: relative;
+  display: inline-block;
+  border-radius: 20px;
+  overflow: hidden;
+  margin: 0.25rem;
+  transition: all 0.3s ease;
+}
+
+.star-border-tag::before,
+.star-border-tag::after {
+  content: '';
+  position: absolute;
+  width: 300%;
+  height: 50%;
+  opacity: 0.7;
+  border-radius: 50%;
+  z-index: 0;
+  transition: opacity 0.3s ease;
+}
+
+.star-border-tag::before {
+  background: radial-gradient(circle, #66b3ff, transparent 10%);
+  bottom: -12px;
+  right: -250%;
+  animation: star-movement-bottom 6s linear infinite alternate;
+}
+
+.star-border-tag::after {
+  background: radial-gradient(circle, #66b3ff, transparent 10%);
+  top: -12px;
+  left: -250%;
+  animation: star-movement-top 6s linear infinite alternate;
+}
+
+.star-border-tag:hover::before,
+.star-border-tag:hover::after {
+  opacity: 1;
+}
+
+.star-border-tag .tag-content {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: var(--text-color);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-align: center;
+  padding: 0.6rem 1.2rem;
+  border-radius: 20px;
+  z-index: 1;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: block;
+}
+
+html.dark .star-border-tag .tag-content {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.star-border-tag:hover .tag-content {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+html.dark .star-border-tag:hover .tag-content {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+@keyframes star-movement-bottom {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-100%, 0%);
+    opacity: 0;
+  }
+}
+
+@keyframes star-movement-top {
+  0% {
+    transform: translate(0%, 0%);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(100%, 0%);
+    opacity: 0;
+  }
+}
+
+/* 响应式设计 */
+@media (max-width: 1200px) {
+  .glass-container {
+    width: 75vw;
+    max-width: 75vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .glass-container {
+    width: 95vw;
+    max-width: 95vw;
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+  }
+
+  .glass-card {
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+  }
+
+  .star-border-tag {
+    margin: 0.2rem;
+  }
+
+  .star-border-tag .tag-content {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .glass-container {
+    width: 98vw;
+    max-width: 98vw;
+    padding: 1rem;
+  }
+}

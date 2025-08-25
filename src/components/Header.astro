@@ -1,74 +1,76 @@
 ---
-import Navigation from "./Navigation.astro";
-import ThemeToggle from "./ThemeToggle.astro";
+import CardNav from "./CardNav.jsx";
+import ThemeIcon from "./ThemeIcon.astro";
+import "../styles/CardNav.css";
+
+const navItems = [
+  {
+    label: "首页",
+    key: "home",
+    links: [
+      {
+        label: "回到首页",
+        key: "backToHome",
+        href: "/",
+        ariaLabel: "回到首页",
+      },
+    ],
+  },
+  {
+    label: "博客",
+    key: "blog",
+    links: [
+      {
+        label: "查看博客",
+        key: "viewBlog",
+        href: "/blog/",
+        ariaLabel: "查看博客",
+      },
+    ],
+  },
+  {
+    label: "标签",
+    key: "tags",
+    links: [
+      {
+        label: "浏览标签",
+        key: "browseTags",
+        href: "/tags/",
+        ariaLabel: "浏览标签",
+      },
+    ],
+  },
+  {
+    label: "关于",
+    key: "about",
+    links: [
+      {
+        label: "关于本站",
+        key: "aboutSite",
+        href: "/about/",
+        ariaLabel: "关于本站",
+      },
+    ],
+  },
+];
 ---
 
 <header>
-  <div class="header-content">
-    <div class="hamburger">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
-    <Navigation />
-    <ThemeToggle />
-  </div>
+  <CardNav
+    client:load
+    logo="/favicon.svg"
+    logoAlt="网站 Logo"
+    items={navItems}
+    menuColor="var(--text-color)"
+  >
+    <ThemeIcon />
+  </CardNav>
 </header>
 
 <style>
   header {
-    margin: 0em 0 2em;
-    padding: 1rem 0;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  .header-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 1rem;
-  }
-
-  .hamburger {
-    padding-right: 20px;
-    cursor: pointer;
-  }
-
-  .hamburger span {
-    display: block;
-    width: 25px;
-    height: 3px;
-    margin: 5px auto;
-    background-color: var(--text-color);
-    transition: 0.3s;
-  }
-
-  .hamburger.expanded span:nth-child(1) {
-    transform: rotate(-45deg) translate(-5px, 6px);
-  }
-
-  .hamburger.expanded span:nth-child(2) {
-    opacity: 0;
-  }
-
-  .hamburger.expanded span:nth-child(3) {
-    transform: rotate(45deg) translate(-5px, -6px);
-  }
-
-  @media screen and (min-width: 636px) {
-    .hamburger {
-      display: none;
-    }
+    position: relative;
+    z-index: 100;
+    height: 100px; /* 为导航栏留出空间 */
   }
 </style>
-
-<script>
-  const hamburger = document.querySelector(".hamburger");
-  if (hamburger) {
-    hamburger.addEventListener("click", () => {
-      hamburger.classList.toggle("expanded");
-    });
-  }
-</script>

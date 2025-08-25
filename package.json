@@ -11,8 +11,13 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/preact": "^4.1.0",
     "@astrojs/rss": "^4.0.12",
-    "astro": "^5.12.8"
+    "astro": "^5.12.8",
+    "gsap": "^3.13.0",
+    "ogl": "^1.0.11",
+    "preact": "^10.27.0",
+    "react-github-calendar": "^4.5.9"
   },
   "devDependencies": {
     "gh-pages": "^6.3.0",

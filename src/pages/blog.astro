@@ -1,94 +1,426 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import DarkVeil from "../components/Backgrounds/DarkVeil.jsx";
+import LoadingTransition from "../components/LoadingTransition.jsx";
+import "../styles/GlassContainer.css";
+import "../styles/LoadingTransition.css";
 
 const allPosts = await Astro.glob("../pages/posts/*.md");
+
+// 分页配置
+const POSTS_PER_PAGE = 6;
+const currentPage = parseInt(Astro.url.searchParams.get("page") || "1");
+const totalPosts = allPosts.length;
+const totalPages = Math.ceil(totalPosts / POSTS_PER_PAGE);
+
+// 计算当前页的文章
+const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+const endIndex = startIndex + POSTS_PER_PAGE;
+const currentPosts = allPosts
+  .sort(
+    (a, b) =>
+      new Date(b.frontmatter.pubDate).getTime() -
+      new Date(a.frontmatter.pubDate).getTime()
+  )
+  .slice(startIndex, endIndex);
+
+// 生成分页链接
+const generatePageUrl = (page: number) => {
+  return page === 1 ? "/blog/" : `/blog/?page=${page}`;
+};
 ---
 
 <BaseLayout pageTitle="博客 | 我的 Astro 博客">
-  <h1>我的博客</h1>
-  <p>这里是我分享学习 Astro 过程的地方！</p>
-  <p><a href="/rss.xml">🔗 RSS 订阅</a></p>
-
-  <div class="posts">
-    {
-      allPosts.map((post) => (
-        <article class="post-preview">
-          <h2>
-            <a href={post.url}>{post.frontmatter.title}</a>
-          </h2>
-          <p class="meta">
-            发布于 {post.frontmatter.pubDate.slice(0, 10)} | 作者：
-            {post.frontmatter.author}
-          </p>
-          <p>{post.frontmatter.description}</p>
-          {post.frontmatter.tags && (
-            <div class="tags">
-              {post.frontmatter.tags.map((tag) => (
-                <a href={`/tags/${tag}/`} class="tag">
-                  #{tag}
-                </a>
-              ))}
-            </div>
-          )}
-        </article>
-      ))
-    }
+  <!-- DarkVeil 背景效果 -->
+  <div
+    style="width: 100%; height: 100vh; position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none;"
+  >
+    <DarkVeil
+      client:only="preact"
+      baseColor="#D6FFE4"
+      proximity={120}
+      shockRadius={250}
+      shockStrength={5}
+      resistance={750}
+      returnDuration={1.5}
+    />
   </div>
+
+  <!-- 页面加载过渡动画 -->
+  <LoadingTransition
+    client:only="preact"
+    loadingText="正在加载博客页面..."
+    minLoadingTime={800}
+  >
+    <!-- 移除大背景容器，直接使用页面容器 -->
+    <div class="blog-page-container">
+      <div class="header-section">
+        <h1 data-i18n="blog.title">📝 博客</h1>
+        <p class="subtitle">记录思考与分享知识</p>
+      </div>
+
+      <div class="posts">
+        {
+          currentPosts.map((post, index) => (
+            <a
+              href={post.url}
+              class="blog-card-link"
+              style={`animation-delay: ${index * 0.1}s`}
+            >
+              <article class="blog-card">
+                <h2>{post.frontmatter.title}</h2>
+                <p class="meta">
+                  📅 {post.frontmatter.pubDate.slice(0, 10)} | 👤{" "}
+                  {post.frontmatter.author}
+                </p>
+                <p class="description">{post.frontmatter.description}</p>
+                {post.frontmatter.tags && (
+                  <div class="tags">
+                    {post.frontmatter.tags.map((tag) => (
+                      <a
+                        href={`/search?q=${encodeURIComponent(tag)}`}
+                        class="tag-item"
+                      >
+                        {tag}
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </article>
+            </a>
+          ))
+        }
+      </div>
+
+      <!-- 分页组件 -->
+      {
+        totalPages > 1 && (
+          <div class="pagination">
+            <div class="pagination-info">
+              第 {currentPage} 页，共 {totalPages} 页 | 总计 {totalPosts} 篇文章
+            </div>
+
+            <div class="pagination-controls">
+              {currentPage > 1 && (
+                <a
+                  href={generatePageUrl(currentPage - 1)}
+                  class="pagination-btn prev"
+                >
+                  ← 上一页
+                </a>
+              )}
+
+              {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                (page) => (
+                  <a
+                    href={generatePageUrl(page)}
+                    class={`pagination-btn ${page === currentPage ? "active" : ""}`}
+                  >
+                    {page}
+                  </a>
+                )
+              )}
+
+              {currentPage < totalPages && (
+                <a
+                  href={generatePageUrl(currentPage + 1)}
+                  class="pagination-btn next"
+                >
+                  下一页 →
+                </a>
+              )}
+            </div>
+          </div>
+        )
+      }
+    </div>
+  </LoadingTransition>
+
+  <style>
+    /* 博客页面容器 */
+    .blog-page-container {
+      width: 65vw;
+      max-width: 65vw;
+      margin: 0 auto;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    .header-section {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .header-section h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0;
+    }
+
+    .posts {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    /* 博客卡片链接容器 */
+    .blog-card-link {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      opacity: 0;
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    /* 优化的博客卡片 - 使用与关于页面一致的浅白色透明容器 */
+    .blog-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 15px;
+      padding: 2rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+    }
+
+    .blog-card-link:hover .blog-card {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .blog-card h2 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .blog-card h2 {
+      color: white;
+      transition: color 0.3s ease;
+    }
+
+    .blog-card-link:hover .blog-card h2 {
+      color: #667eea;
+    }
+
+    .meta {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .description {
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .tag-item {
+      padding: 0.25rem 0.75rem;
+      background: rgba(102, 126, 234, 0.2);
+      color: #667eea;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(102, 126, 234, 0.3);
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    /* 暗色主题适配 */
+    html.dark .subtitle {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    html.dark .blog-card {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    html.dark .blog-card-link:hover .blog-card {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* 分页样式 */
+    .pagination {
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+    }
+
+    .pagination-info {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .pagination-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .pagination-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 44px;
+      height: 44px;
+      padding: 0 12px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      cursor: pointer;
+    }
+
+    .pagination-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .pagination-btn.active {
+      background: rgba(102, 126, 234, 0.3);
+      border-color: rgba(102, 126, 234, 0.5);
+      color: white;
+      box-shadow: 0 0 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .pagination-btn.prev,
+    .pagination-btn.next {
+      padding: 0 16px;
+      font-weight: 600;
+    }
+
+    /* 暗色主题分页适配 */
+    html.dark .pagination-info {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    html.dark .pagination-btn {
+      background: rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    html.dark .pagination-btn:hover {
+      background: rgba(0, 0, 0, 0.3);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    html.dark .pagination-btn.active {
+      background: rgba(102, 126, 234, 0.4);
+      border-color: rgba(102, 126, 234, 0.6);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 1200px) {
+      .blog-page-container {
+        width: 75vw;
+        max-width: 75vw;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .blog-page-container {
+        width: 95vw;
+        max-width: 95vw;
+        padding: 1rem;
+      }
+
+      .header-section h1 {
+        font-size: 2rem;
+      }
+
+      .blog-card {
+        padding: 1.5rem;
+      }
+
+      .posts {
+        gap: 1.5rem;
+      }
+
+      .pagination-controls {
+        gap: 0.25rem;
+      }
+
+      .pagination-btn {
+        min-width: 40px;
+        height: 40px;
+        font-size: 0.8rem;
+      }
+
+      .pagination-btn.prev,
+      .pagination-btn.next {
+        padding: 0 12px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .blog-page-container {
+        width: 98vw;
+        max-width: 98vw;
+        padding: 0.5rem;
+      }
+    }
+  </style>
+
+  <script>
+    // 处理标签点击事件，防止与博客卡片链接冲突
+    document.addEventListener("DOMContentLoaded", function () {
+      const tagLinks = document.querySelectorAll(".tag-item");
+
+      tagLinks.forEach((tag) => {
+        tag.addEventListener("click", function (e) {
+          e.stopPropagation(); // 阻止事件冒泡到父级链接
+        });
+      });
+    });
+  </script>
+
+  <script>
+    import "../utils/i18n-client.js";
+  </script>
 </BaseLayout>
-
-<style>
-  .posts {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-
-  .post-preview {
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1.5rem;
-    background: var(--card-bg);
-    transition: all 0.3s ease;
-  }
-
-  .post-preview h2 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-  }
-
-  .post-preview h2 a {
-    color: var(--text-color);
-    text-decoration: none;
-  }
-
-  .post-preview h2 a:hover {
-    color: #0066cc;
-  }
-
-  .meta {
-    color: #666;
-    font-style: italic;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-  }
-
-  .tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-top: 1rem;
-  }
-
-  .tag {
-    background-color: #e0e0e0;
-    color: #333;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    text-decoration: none;
-  }
-
-  .tag:hover {
-    background-color: #d0d0d0;
-  }
-</style>

@@ -1,44 +1,56 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
+import DarkVeil from "../components/Backgrounds/DarkVeil.jsx";
 
 const { frontmatter } = Astro.props;
 ---
 
 <BaseLayout pageTitle={frontmatter.title}>
-  <article>
-    <header>
-      <h1>{frontmatter.title}</h1>
-      <p class="meta">
-        发布于 {frontmatter.pubDate.slice(0, 10)} | 作者：{frontmatter.author}
-      </p>
-      {
-        frontmatter.image && (
-          <img src={frontmatter.image.url} alt={frontmatter.image.alt} />
-        )
-      }
-      {
-        frontmatter.tags && (
-          <div class="tags">
-            {frontmatter.tags.map((tag) => (
-              <a href={`/tags/${tag}/`} class="tag">
-                #{tag}
-              </a>
-            ))}
-          </div>
-        )
-      }
-    </header>
+  <!-- DarkVeil 背景效果 -->
+  <div
+    style="width: 100%; height: 100vh; position: fixed; top: 0; left: 0; z-index: 0; pointer-events: none;"
+  >
+    <DarkVeil client:only="preact" />
+  </div>
 
-    <div class="content">
-      <slot />
-    </div>
-  </article>
+  <div class="post-content">
+    <article>
+      <header>
+        <h1>{frontmatter.title}</h1>
+        <p class="meta">
+          发布于 {frontmatter.pubDate.slice(0, 10)} | 作者：{frontmatter.author}
+        </p>
+        {
+          frontmatter.image && (
+            <img src={frontmatter.image.url} alt={frontmatter.image.alt} />
+          )
+        }
+        {
+          frontmatter.tags && (
+            <div class="tags">
+              {frontmatter.tags.map((tag) => (
+                <a href={`/search/?q=${encodeURIComponent(tag)}`} class="tag">
+                  #{tag}
+                </a>
+              ))}
+            </div>
+          )
+        }
+      </header>
+
+      <div class="content">
+        <slot />
+      </div>
+    </article>
+  </div>
 </BaseLayout>
 
 <style>
   article {
-    max-width: 800px;
+    width: 65vw;
+    max-width: 65vw;
     margin: 0 auto;
+    box-sizing: border-box;
   }
 
   header {
@@ -73,16 +85,37 @@ const { frontmatter } = Astro.props;
   }
 
   .tag {
-    background-color: #f0f0f0;
-    color: #333;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.875rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(102, 126, 234, 0.2);
+    color: #667eea;
     text-decoration: none;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
   }
 
   .tag:hover {
-    background-color: #e0e0e0;
+    background: rgba(102, 126, 234, 0.3);
+    color: white;
+    transform: translateY(-1px);
+  }
+
+  html.dark .tag {
+    background: rgba(102, 126, 234, 0.25);
+    color: #8b9cf7;
+    border-color: rgba(102, 126, 234, 0.4);
+  }
+
+  html.dark .tag:hover {
+    background: rgba(102, 126, 234, 0.4);
+    color: white;
+  }
+
+  .post-content {
+    position: relative;
+    z-index: 10;
+    pointer-events: auto;
   }
 
   .content {
@@ -107,5 +140,27 @@ const { frontmatter } = Astro.props;
 
   .content li {
     margin-bottom: 0.5rem;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 1200px) {
+    article {
+      width: 75vw;
+      max-width: 75vw;
+    }
+  }
+
+  @media (max-width: 768px) {
+    article {
+      width: 95vw;
+      max-width: 95vw;
+    }
+  }
+
+  @media (max-width: 480px) {
+    article {
+      width: 98vw;
+      max-width: 98vw;
+    }
   }
 </style>

@@ -1,0 +1,518 @@
+.card-nav-container {
+  position: fixed;
+  top: 2em;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1200px;
+  z-index: 99;
+  box-sizing: border-box;
+  /* 优化的过渡动画 */
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+              top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+              opacity 0.4s ease,
+              width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  /* 性能优化 */
+  will-change: transform, opacity, width;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* 页面顶部时隐藏背景但保持文字可见 */
+.card-nav-container.at-top {
+  top: 1rem;
+  transform: translateX(-50%);
+  opacity: 1;
+  pointer-events: auto;
+  width: 90%;
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1),
+              opacity 0.3s ease,
+              width 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* 开始滚动时的显示状态 */
+.card-nav-container.scrolling {
+  top: 1rem;
+  transform: translateX(-50%);
+  opacity: 1;
+  width: 90%;
+  pointer-events: auto;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+              top 0.4s cubic-bezier(0.25, 0.8, 0.25, 1),
+              opacity 0.4s ease,
+              width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* 向下滚动时的收缩隐藏状态 */
+.card-nav-container.hidden {
+  transform: translate(-50%, -120%) scale(0.8);
+  width: 60%;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.card-nav {
+  display: block;
+  height: 56px;
+  padding: 0;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  will-change: height, transform, opacity;
+  /* 浅白色模糊效果 */
+  background-color: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  /* 性能优化 */
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.card-nav.expanding,
+.card-nav.expanded {
+  background-color: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.card-nav.contracting {
+  background-color: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+html.dark .card-nav {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+html.dark .card-nav.expanding,
+html.dark .card-nav.expanded {
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+html.dark .card-nav.contracting {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px) saturate(1.2);
+  -webkit-backdrop-filter: blur(20px) saturate(1.2);
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* 在顶部时：完全透明无背景 */
+.card-nav-container.at-top .card-nav {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+/* 确保顶部状态下文字仍然可见 */
+.card-nav-container.at-top .card-nav-top {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.card-nav-container.at-top .desktop-nav-links a,
+.card-nav-container.at-top .logo-text {
+  color: white;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* 滚动状态下：使用类似首页tag-bubble的磨砂白色样式 */
+.card-nav-container.scrolling .card-nav {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+html.dark .card-nav-container.scrolling .card-nav {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* 暗色主题：顶部时完全透明 */
+html.dark .card-nav-container.at-top .card-nav {
+  background-color: transparent;
+  border-color: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+html.dark .card-nav-container.at-top .desktop-nav-links a,
+html.dark .card-nav-container.at-top .logo-text {
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.card-nav-top {
+  position: relative;
+  /* Changed from absolute */
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  /* Increased padding for more spacing */
+  transition: border-color 0.3s ease;
+  z-index: 3;
+  /* Ensure top bar is above content */
+}
+
+.card-nav-left {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex: 1;
+}
+
+.hamburger-menu {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  gap: 6px;
+}
+
+.hamburger-menu:hover .hamburger-line {
+  opacity: 0.75;
+}
+
+.hamburger-line {
+  width: 30px;
+  height: 2px;
+  background-color: currentColor;
+  transition: transform 0.25s ease, opacity 0.2s ease, margin 0.3s ease;
+  transform-origin: 50% 50%;
+}
+
+.hamburger-menu.open .hamburger-line:first-child {
+  transform: translateY(4px) rotate(45deg);
+}
+
+.hamburger-menu.open .hamburger-line:last-child {
+  transform: translateY(-4px) rotate(-45deg);
+}
+
+.desktop-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.desktop-nav-links a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+  font-size: 16px;
+}
+
+.desktop-nav-links a:hover {
+  opacity: 0.7;
+}
+
+
+.logo-container {
+  display: flex;
+  align-items: center;
+}
+
+a.logo-text {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.card-nav-cta-button {
+  background-color: #111;
+  color: white;
+  border: none;
+  border-radius: calc(0.75rem - 0.35rem);
+  padding: 0 1rem;
+  height: 100%;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.card-nav-cta-button:hover {
+  background-color: #333;
+}
+
+.card-nav-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.language-switcher {
+  position: relative;
+}
+
+.language-button {
+  background: none;
+  border: none;
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.2s ease;
+  border-radius: 0.25rem;
+}
+
+.language-button:hover {
+  color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.language-icon {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.language-text {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.language-dropdown {
+  position: absolute;
+  top: calc(100% + 0.25rem);
+  right: 0;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  z-index: 1000;
+  min-width: 120px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  animation: fadeInScale 0.2s ease-out;
+}
+
+html.dark .language-dropdown {
+  background: rgba(0, 0, 0, 0.9);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.language-option {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.25rem;
+  transition: all 0.2s ease;
+  color: var(--text-color);
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  width: 100%;
+  text-align: left;
+  font-weight: 500;
+}
+
+.language-option:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.language-option.active {
+  background: rgba(102, 126, 234, 0.15);
+  color: #667eea;
+  font-weight: 600;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.action-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  color: var(--text-color);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.action-icon:hover {
+  opacity: 0.7;
+}
+
+.action-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.card-nav-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 56px;
+  bottom: 0;
+  padding: 0.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  visibility: hidden;
+  pointer-events: none;
+  z-index: 2;
+  /* Ensure content is above the frosted glass layer */
+}
+
+.card-nav.open .card-nav-content {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.nav-card {
+  height: 85%;
+  flex: 1 1 0;
+  min-width: 0;
+  border-radius: calc(0.75rem - 0.2rem);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px;
+  gap: 8px;
+  user-select: none;
+  background-color: rgba(0, 0, 0, 0.05);
+  /* Light mode slightly darker */
+}
+
+html.dark .nav-card {
+  background-color: rgba(255, 255, 255, 0.15);
+  /* Dark mode slightly lighter */
+}
+
+.nav-card-label {
+  font-weight: 400;
+  font-size: 22px;
+  letter-spacing: -0.5px;
+}
+
+.nav-card-links {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.nav-card-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.nav-card-link:hover {
+  opacity: 0.7;
+}
+
+.nav-card-link-icon {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 768px) {
+  .desktop-nav-links {
+    display: none;
+  }
+
+  .card-nav-content {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+    gap: 1rem;
+    top: 56px;
+    bottom: auto;
+  }
+
+  .nav-card {
+    height: auto;
+    padding: 16px;
+  }
+
+  .nav-card-links {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 12px;
+  }
+}
+
+/* 右侧导航区域样式 */
+.card-nav-right-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.card-nav-right-actions .desktop-nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .card-nav-right-actions .desktop-nav-links {
+    display: none;
+  }
+}

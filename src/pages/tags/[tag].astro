@@ -1,13 +1,19 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import DotGrid from "../../components/Backgrounds/DotGrid.jsx";
+import "../../styles/GlassContainer.css";
 
 export async function getStaticPaths() {
-  const allPosts = await Astro.glob('../posts/*.md');
-  
-  const uniqueTags = [...new Set(allPosts.map((post) => post.frontmatter.tags).flat())];
+  const allPosts = await Astro.glob("../posts/*.md");
+
+  const uniqueTags = [
+    ...new Set(allPosts.map((post) => post.frontmatter.tags).flat()),
+  ];
 
   return uniqueTags.map((tag) => {
-    const filteredPosts = allPosts.filter((post) => post.frontmatter.tags.includes(tag));
+    const filteredPosts = allPosts.filter((post) =>
+      post.frontmatter.tags.includes(tag)
+    );
     return {
       params: { tag },
       props: { posts: filteredPosts },
@@ -20,83 +26,224 @@ const { posts } = Astro.props;
 ---
 
 <BaseLayout pageTitle={`标签：${tag}`}>
-  <h1>标签：#{tag}</h1>
-  <p>以下是标记为 "{tag}" 的所有文章：</p>
-  
-  <div class="posts">
-    {posts.map((post) => (
-      <article class="post-preview">
-        <h2><a href={post.url}>{post.frontmatter.title}</a></h2>
-        <p class="meta">
-          发布于 {post.frontmatter.pubDate.slice(0, 10)} | 作者：{post.frontmatter.author}
-        </p>
-        <p>{post.frontmatter.description}</p>
-        {post.frontmatter.tags && (
-          <div class="tags">
-            {post.frontmatter.tags.map((postTag) => (
-              <a href={`/tags/${postTag}/`} class="tag">#{postTag}</a>
-            ))}
-          </div>
-        )}
-      </article>
-    ))}
+  <!-- DotGrid 背景效果 -->
+  <div
+    style="width: 100%; height: 100vh; position: fixed; top: 0; left: 0; z-index: -1;"
+  >
+    <DotGrid
+      client:only="preact"
+      dotSize={6}
+      gap={15}
+      baseColor="transparent"
+      activeColor="transparent"
+      proximity={120}
+      shockRadius={250}
+      shockStrength={5}
+      resistance={750}
+      returnDuration={1.5}
+    />
   </div>
-  
-  <p><a href="/blog/">← 返回博客</a></p>
-</BaseLayout>
 
-<style>
-  .posts {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-  }
-  
-  .post-preview {
-    border: 1px solid #eee;
-    border-radius: 8px;
-    padding: 1.5rem;
-    background: #fafafa;
-  }
-  
-  .post-preview h2 {
-    margin-top: 0;
-    margin-bottom: 0.5rem;
-  }
-  
-  .post-preview h2 a {
-    color: #333;
-    text-decoration: none;
-  }
-  
-  .post-preview h2 a:hover {
-    color: #0066cc;
-  }
-  
-  .meta {
-    color: #666;
-    font-style: italic;
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-  }
-  
-  .tags {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-top: 1rem;
-  }
-  
-  .tag {
-    background-color: #e0e0e0;
-    color: #333;
-    padding: 0.25rem 0.5rem;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    text-decoration: none;
-  }
-  
-  .tag:hover {
-    background-color: #d0d0d0;
-  }
-</style>
+  <div class="glass-container">
+    <div class="header-section">
+      <h1>🏷️ {tag}</h1>
+      <p class="subtitle">共找到 {posts.length} 篇相关文章</p>
+    </div>
+
+    <div class="posts">
+      {
+        posts.map((post, index) => (
+          <article
+            class="glass-card"
+            style={`animation-delay: ${index * 0.1}s`}
+          >
+            <h2>
+              <a href={post.url}>{post.frontmatter.title}</a>
+            </h2>
+            <p class="meta">
+              📅 {post.frontmatter.pubDate.slice(0, 10)} | 👤{" "}
+              {post.frontmatter.author}
+            </p>
+            <p class="description">{post.frontmatter.description}</p>
+            {post.frontmatter.tags && (
+              <div class="tags">
+                {post.frontmatter.tags.map((postTag) => (
+                  <a
+                    href={`/search/?q=${encodeURIComponent(postTag)}`}
+                    class={`glass-tag ${postTag === tag ? "current-tag" : ""}`}
+                  >
+                    #{postTag}
+                  </a>
+                ))}
+              </div>
+            )}
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="navigation-section">
+      <a href="/tags/" class="back-button">← 所有标签</a>
+      <a href="/blog/" class="back-button">← 返回博客</a>
+    </div>
+  </div>
+
+  <style>
+    /* 页面特定样式 */
+    .header-section {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .header-section h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: #666;
+      margin: 0;
+      opacity: 0.8;
+    }
+
+    html.dark .subtitle {
+      color: #ccc;
+    }
+
+    .posts {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .glass-card {
+      opacity: 0;
+      animation: fadeInUp 0.6s ease-out forwards;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .glass-card h2 {
+      margin-top: 0;
+      margin-bottom: 0.75rem;
+      font-size: 1.4rem;
+    }
+
+    .glass-card h2 a {
+      color: var(--text-color);
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .glass-card h2 a:hover {
+      color: #667eea;
+    }
+
+    .meta {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      opacity: 0.8;
+    }
+
+    html.dark .meta {
+      color: #ccc;
+    }
+
+    .description {
+      line-height: 1.6;
+      margin-bottom: 1rem;
+      color: var(--text-color);
+      opacity: 0.9;
+    }
+
+    .tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .current-tag {
+      background: rgba(102, 126, 234, 0.2) !important;
+      border-color: rgba(102, 126, 234, 0.4) !important;
+      color: #667eea !important;
+      box-shadow: 0 0 10px rgba(102, 126, 234, 0.3) !important;
+    }
+
+    .navigation-section {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .back-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0.75rem;
+      color: var(--text-color);
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    html.dark .back-button {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .back-button:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    html.dark .back-button:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+      .header-section h1 {
+        font-size: 2rem;
+      }
+
+      .navigation-section {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .glass-card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</BaseLayout>

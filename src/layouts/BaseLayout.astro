@@ -1,12 +1,16 @@
 ---
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import ScrollProgress from "../components/ScrollProgress.jsx";
+import "../styles/ScrollProgress.css";
 
 export interface Props {
   pageTitle: string;
+  isHomePage?: boolean;
+  fullWidth?: boolean;
 }
 
-const { pageTitle } = Astro.props;
+const { pageTitle, isHomePage = false, fullWidth = false } = Astro.props;
 ---
 
 <html lang="zh-cn">
@@ -16,10 +20,47 @@ const { pageTitle } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
+
+    <!-- 立即应用主题，防止闪烁 -->
+    <script is:inline>
+      (function () {
+        const getTheme = () => {
+          if (typeof localStorage !== "undefined") {
+            const stored = localStorage.getItem("theme");
+            if (stored && ["dark", "light"].includes(stored)) {
+              return stored;
+            }
+          }
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        };
+
+        const theme = getTheme();
+        document.documentElement.classList.toggle("dark", theme === "dark");
+
+        // 存储主题设置
+        if (typeof localStorage !== "undefined") {
+          localStorage.setItem("theme", theme);
+        }
+      })();
+    </script>
+
+    <!-- 预设样式防止闪烁 -->
+    <style>
+      /* Anti-flicker: only set text color initially */
+      html {
+        color: #333333;
+      }
+      html.dark {
+        color: #e0e0e0;
+      }
+    </style>
   </head>
-  <body>
+  <body class={isHomePage ? "home-page" : ""}>
+    {!isHomePage && <ScrollProgress client:only="preact" />}
     <Header />
-    <main>
+    <main class:list={{ "full-width": fullWidth }}>
       <slot />
     </main>
     <Footer />
@@ -43,11 +84,25 @@ const { pageTitle } = Astro.props;
 
   html {
     font-family: sans-serif;
-    background-color: var(--bg-color);
     color: var(--text-color);
+  }
+
+  body {
+    /* Body must have background for backdrop-filter to work properly */
+    background-color: var(--bg-color);
+  }
+
+  html.theme-transition {
     transition:
       background-color 0.3s ease,
       color 0.3s ease;
+  }
+
+  html.theme-transition * {
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease,
+      border-color 0.3s ease;
   }
 
   body {
@@ -56,35 +111,37 @@ const { pageTitle } = Astro.props;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    background-color: var(--bg-color);
     color: var(--text-color);
+    position: relative;
+    overflow-x: hidden; /* 防止光线造成水平滚动 */
   }
 
   main {
     flex: 1;
-    padding: 1rem;
-    max-width: 800px;
+    padding: 0;
+    max-width: none;
     margin: 0 auto;
     width: 100%;
-    animation: fadeIn 0.5s ease-in;
+  }
+
+  main.full-width {
+    max-width: none;
+    padding: 0;
+  }
+
+  /* 只在需要时添加过渡效果 */
+  .fade-in {
+    animation: fadeIn 0.3s ease-out;
   }
 
   @keyframes fadeIn {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(10px);
     }
     to {
       opacity: 1;
       transform: translateY(0);
     }
-  }
-
-  /* 页面加载时的平滑过渡 */
-  * {
-    transition:
-      background-color 0.3s ease,
-      color 0.3s ease,
-      border-color 0.3s ease;
   }
 </style>

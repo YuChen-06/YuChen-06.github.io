@@ -1,6 +1,8 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 
+import preact from '@astrojs/preact';
+
 export default defineConfig({
   // 输出为静态站点
   output: 'static',
@@ -31,4 +33,6 @@ export default defineConfig({
       },
     },
   },
+
+  integrations: [preact()],
 });

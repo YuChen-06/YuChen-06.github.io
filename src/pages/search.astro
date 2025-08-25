@@ -15,7 +15,9 @@ function countWords(text) {
   if (!text) return 0;
   // 移除 Markdown 语法和 HTML 标签
   const cleanText = text
-    .replace(/```[\s\S]*?```/g, "") // 移除代码块
+    .replace(/```
+[\s\S]*?
+```/g, "") // 移除代码块
     .replace(/`[^`]*`/g, "") // 移除行内代码
     .replace(/!\[.*?\]\(.*?\)/g, "") // 移除图片
     .replace(/\[.*?\]\(.*?\)/g, "") // 移除链接
@@ -1315,7 +1317,7 @@ const textCase = "uppercase";
       // 初始化：从9小时开始计时（之前的开发时间）
       const INITIAL_HOURS = 9;
       let totalOnlineMinutes = parseInt(
-        localStorage.getItem(STORAGE_KEY) || (INITIAL_HOURS * 60).toString(),
+        localStorage.getItem(STORAGE_KEY) || (INITIAL_HOURS * 60).toString()
       );
 
       // 如果是第一次访问，设置初始值
@@ -1343,7 +1345,7 @@ const textCase = "uppercase";
       function updateOnlineTime() {
         // 计算本次开发会话时间
         const currentSessionMinutes = Math.floor(
-          (Date.now() - sessionStart) / (1000 * 60),
+          (Date.now() - sessionStart) / (1000 * 60)
         );
 
         // 总开发时间 = 历史累计 + 本次会话
@@ -1393,7 +1395,7 @@ const textCase = "uppercase";
       // 页面卸载时保存累计开发时间
       window.addEventListener("beforeunload", function () {
         const sessionMinutes = Math.floor(
-          (Date.now() - sessionStart) / (1000 * 60),
+          (Date.now() - sessionStart) / (1000 * 60)
         );
         const newTotal = totalOnlineMinutes + sessionMinutes;
         localStorage.setItem(STORAGE_KEY, newTotal.toString());
@@ -1415,7 +1417,7 @@ const textCase = "uppercase";
       document.addEventListener("visibilitychange", function () {
         if (document.hidden) {
           const sessionMinutes = Math.floor(
-            (Date.now() - sessionStart) / (1000 * 60),
+            (Date.now() - sessionStart) / (1000 * 60)
           );
           const newTotal = totalOnlineMinutes + sessionMinutes;
           localStorage.setItem(STORAGE_KEY, newTotal.toString());
@@ -1450,10 +1452,7 @@ const textCase = "uppercase";
 
       const yearPercent = Math.max(
         0,
-        Math.min(
-          100,
-          ((currentTime - yearStart) / (yearEnd - yearStart)) * 100,
-        ),
+        Math.min(100, ((currentTime - yearStart) / (yearEnd - yearStart)) * 100)
       );
 
       const degreePercentElement = document.getElementById("degree-percent");
@@ -1466,6 +1465,22 @@ const textCase = "uppercase";
       }
     });
   </script>
+
+  <script>
+    import "../utils/i18n-client.js";
+  </script>
+</BaseLayout>
+
+  <script>
+    import "../utils/i18n-client.js";
+  </script>
+</BaseLayout>
+  </script>
+</BaseLayout>
+  </script>
+</BaseLayout>
+  </script>
+</BaseLayout>
 
   <script>
     import "../utils/i18n-client.js";

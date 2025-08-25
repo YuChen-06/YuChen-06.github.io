@@ -1,0 +1,10 @@
+.darkveil-canvas {
+  width: 100vw;
+  height: 100vh;
+  display: block;
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}

@@ -1,8 +1,1132 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
+import Particles from "../components/Backgrounds/Particles.jsx";
+import LoadingTransition from "../components/LoadingTransition.jsx";
+import "../styles/LoadingTransition.css";
+
+const pageTitle = "首页";
+
+// 获取最新的博客文章
+const allPosts = await Astro.glob("./posts/*.md");
+const latestPosts = allPosts
+  .sort(
+    (a, b) =>
+      new Date(b.frontmatter.pubDate).valueOf() -
+      new Date(a.frontmatter.pubDate).valueOf()
+  )
+  .slice(0, 3);
+
+// 获取所有标签
+const allTags = allPosts.reduce((tags, post) => {
+  const postTags = post.frontmatter.tags || [];
+  postTags.forEach((tag) => {
+    tags[tag] = (tags[tag] || 0) + 1;
+  });
+  return tags;
+}, {});
+
+const popularTags = Object.entries(allTags)
+  .sort(([, a], [, b]) => b - a)
+  .slice(0, 6);
 ---
 
-<BaseLayout pageTitle="我的 Astro 博客">
-  <h1>我的 Astro 网站</h1>
-  <p>欢迎来到我的学习 Astro 的博客！</p>
+<BaseLayout pageTitle={pageTitle} isHomePage={true}>
+  <!-- Particles 背景效果 - 只在首页显示 -->
+  <div
+    style="width: 100%; height: 100vh; position: fixed; top: 0; left: 0; z-index: -1;"
+  >
+    <Particles
+      client:load
+      particleColors={["#ffffff", "#ffffff"]}
+      particleCount={300}
+      particleSpread={8}
+      speed={0.2}
+      particleBaseSize={200}
+      moveParticlesOnHover={true}
+      alphaParticles={false}
+      disableRotation={false}
+    />
+  </div>
+
+  <!-- 页面加载过渡动画 -->
+  <LoadingTransition
+    client:only="preact"
+    loadingText="欢迎来到我的博客..."
+    minLoadingTime={500}
+  >
+    <!-- Hero Section -->
+    <section class="hero-section">
+      <div class="hero-content">
+        <div class="hero-text">
+          <h1 class="hero-title">
+            <span class="gradient-text" data-i18n="home.heroTitle"
+              >创造 · 分享 · 成长</span
+            >
+          </h1>
+          <p class="hero-subtitle" data-i18n="home.heroSubtitle">
+            欢迎来到我的数字花园，这里记录着我的思考、学习和创作历程
+          </p>
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-number">{allPosts.length}</span>
+              <span class="stat-label" data-i18n="home.articlesCount"
+                >篇文章</span
+              >
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">{Object.keys(allTags).length}</span>
+              <span class="stat-label" data-i18n="home.tagsCount">个标签</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">∞</span>
+              <span class="stat-label" data-i18n="home.possibilitiesCount"
+                >种可能</span
+              >
+            </div>
+          </div>
+          <div class="hero-actions">
+            <a
+              href="/blog/"
+              class="btn btn-primary"
+              data-i18n="home.exploreBlog"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
+              </svg>
+              探索博客
+            </a>
+            <a
+              href="/about/"
+              class="btn btn-secondary"
+              data-i18n="home.aboutMe"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              关于我
+            </a>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="floating-card">
+            <div class="card-content">
+              <div class="code-snippet">
+                <div class="code-header">
+                  <div class="code-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                  <span class="code-title">welcome.js</span>
+                </div>
+                <div class="code-body">
+                  <span class="code-comment">// 欢迎来到我的博客</span><br />
+                  <span class="code-keyword">const</span>
+                  <span class="code-variable">passion</span> = <span
+                    class="code-string">'coding'</span
+                  >;<br />
+                  <span class="code-keyword">const</span>
+                  <span class="code-variable">purpose</span> = <span
+                    class="code-string">'sharing'</span
+                  >;<br />
+                  <span class="code-keyword">const</span>
+                  <span class="code-variable">future</span> = <span
+                    class="code-string">'unlimited'</span
+                  >;
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Latest Posts Section -->
+    <section class="latest-posts-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="home.latestPosts">最新文章</h2>
+          <p class="section-subtitle" data-i18n="home.latestPostsDesc">
+            分享最近的思考和发现
+          </p>
+        </div>
+        <div class="posts-grid">
+          {
+            latestPosts.map((post, index) => (
+              <article
+                class="post-card"
+                style={`animation-delay: ${index * 0.1}s`}
+              >
+                <a href={post.url} class="post-link">
+                  <div class="post-header">
+                    <time class="post-date">
+                      {new Date(post.frontmatter.pubDate).toLocaleDateString(
+                        "zh-CN",
+                        {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}
+                    </time>
+                    {post.frontmatter.tags &&
+                      post.frontmatter.tags.length > 0 && (
+                        <div class="post-tags">
+                          {post.frontmatter.tags.slice(0, 2).map((tag) => (
+                            <span class="post-tag">{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                  </div>
+                  <h3 class="post-title">{post.frontmatter.title}</h3>
+                  <p class="post-excerpt">{post.frontmatter.description}</p>
+                  <div class="post-footer">
+                    <span class="read-more" data-i18n="home.readMore">
+                      阅读更多
+                    </span>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M5 12h14" />
+                      <path d="M12 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </a>
+              </article>
+            ))
+          }
+        </div>
+        <div class="section-footer">
+          <a href="/blog/" class="view-all-link" data-i18n="home.viewAllPosts">
+            查看所有文章
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M5 12h14"></path>
+              <path d="M12 5l7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popular Tags Section -->
+    <section class="tags-section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title" data-i18n="home.popularTags">热门标签</h2>
+          <p class="section-subtitle" data-i18n="home.popularTagsDesc">
+            探索不同的主题和领域
+          </p>
+        </div>
+        <div class="tags-cloud">
+          {
+            popularTags.map(([tag, count], index) => (
+              <a
+                href={`/search?q=${encodeURIComponent(tag)}`}
+                class="tag-bubble"
+                style={`animation-delay: ${index * 0.05}s`}
+              >
+                <span class="tag-name">{tag}</span>
+                <span class="tag-count">{count}</span>
+              </a>
+            ))
+          }
+        </div>
+        <div class="section-footer">
+          <a href="/tags/" class="view-all-link" data-i18n="home.viewAllTags">
+            查看所有标签
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M5 12h14"></path>
+              <path d="M12 5l7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Preview Section -->
+    <section class="about-preview-section">
+      <div class="container">
+        <div class="about-content">
+          <div class="about-text">
+            <h2 class="section-title" data-i18n="home.aboutPreview">关于我</h2>
+            <p class="about-description" data-i18n="home.aboutDescription">
+              我是一名热爱技术的开发者，喜欢探索新技术、分享知识和创造有趣的项目。
+              这个博客是我记录学习历程、分享经验和思考的地方。
+            </p>
+            <div class="about-features">
+              <div class="feature-item">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M9 19c-5 0-8-3-8-8s3-8 8-8 8 3 8 8-3 8-8 8z"></path>
+                  <path d="M24 21l-6-6"></path>
+                </svg>
+                <span data-i18n="home.feature1">持续学习</span>
+              </div>
+              <div class="feature-item">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+                <span data-i18n="home.feature2">知识分享</span>
+              </div>
+              <div class="feature-item">
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+                  ></path>
+                </svg>
+                <span data-i18n="home.feature3">创新思维</span>
+              </div>
+            </div>
+            <a
+              href="/about/"
+              class="btn btn-outline"
+              data-i18n="home.learnMore"
+            >
+              了解更多
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M5 12h14"></path>
+                <path d="M12 5l7 7-7 7"></path>
+              </svg>
+            </a>
+          </div>
+          <div class="about-visual">
+            <div class="profile-card">
+              <div class="profile-avatar">
+                <div class="avatar-placeholder">
+                  <svg
+                    width="48"
+                    height="48"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+              </div>
+              <div class="profile-info">
+                <h3 class="profile-name">开发者</h3>
+                <p class="profile-title">全栈工程师 & 博客作者</p>
+                <div class="profile-stats">
+                  <div class="profile-stat">
+                    <span class="stat-value">{allPosts.length}</span>
+                    <span class="stat-label">文章</span>
+                  </div>
+                  <div class="profile-stat">
+                    <span class="stat-value">{Object.keys(allTags).length}</span
+                    >
+                    <span class="stat-label">标签</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </LoadingTransition>
+
+  <style>
+    /* 首页专用样式 - 现代化设计 */
+    :global(body.home-page) {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    /* 容器样式 */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    /* Hero Section */
+    .hero-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+      max-width: 1200px;
+      width: 100%;
+      padding: 2rem;
+    }
+
+    .hero-text {
+      z-index: 2;
+    }
+
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      color: white;
+    }
+
+    .gradient-text {
+      background: linear-gradient(
+        135deg,
+        #ffffff 0%,
+        #f0f8ff 50%,
+        #e6f3ff 100%
+      );
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2rem;
+      font-weight: 400;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-number {
+      display: block;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 0.5rem;
+      display: block;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    /* 按钮样式 */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.875rem 1.75rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      backdrop-filter: blur(20px);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-primary:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: white;
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text-color);
+      border-color: rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-outline:hover {
+      background: rgba(102, 126, 234, 0.1);
+      border-color: rgba(102, 126, 234, 0.5);
+      transform: translateY(-2px);
+    }
+
+    /* Hero Visual */
+    .hero-visual {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .floating-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 2rem;
+      animation: float 6s ease-in-out infinite;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes float {
+      0%,
+      100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+    .code-snippet {
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 12px;
+      overflow: hidden;
+      font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
+      min-width: 300px;
+    }
+
+    .code-header {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .code-dots span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #ff5f56;
+    }
+
+    .code-dots span:nth-child(2) {
+      background: #ffbd2e;
+    }
+
+    .code-dots span:nth-child(3) {
+      background: #27ca3f;
+    }
+
+    .code-title {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.875rem;
+    }
+
+    .code-body {
+      padding: 1.5rem;
+      color: #f8f8f2;
+      line-height: 1.6;
+      font-size: 0.875rem;
+    }
+
+    .code-comment {
+      color: #6272a4;
+    }
+    .code-keyword {
+      color: #ff79c6;
+    }
+    .code-variable {
+      color: #50fa7b;
+    }
+    .code-string {
+      color: #f1fa8c;
+    }
+
+    /* Section Styles */
+    .latest-posts-section,
+    .tags-section,
+    .about-preview-section {
+      padding: 5rem 0;
+      position: relative;
+    }
+
+    .latest-posts-section {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px);
+    }
+
+    .tags-section {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .about-preview-section {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+      font-size: 1.125rem;
+      color: rgba(255, 255, 255, 0.8);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .section-footer {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .view-all-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .view-all-link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-2px);
+    }
+
+    /* Posts Grid */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .post-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      animation: slideUp 0.6s ease forwards;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    @keyframes slideUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .post-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .post-link {
+      display: block;
+      padding: 2rem;
+      text-decoration: none;
+      color: inherit;
+      height: 100%;
+    }
+
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .post-date {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .post-tags {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .post-tag {
+      background: rgba(102, 126, 234, 0.3);
+      color: rgba(255, 255, 255, 0.9);
+      padding: 0.25rem 0.75rem;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .post-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+
+    .post-excerpt {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .post-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 600;
+    }
+
+    .read-more {
+      font-size: 0.875rem;
+    }
+
+    /* Tags Cloud */
+    .tags-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .tag-bubble {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 50px;
+      padding: 0.75rem 1.5rem;
+      text-decoration: none;
+      color: white;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .tag-bubble:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.4);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .tag-name {
+      font-weight: 600;
+    }
+
+    .tag-count {
+      background: rgba(255, 255, 255, 0.2);
+      padding: 0.25rem 0.5rem;
+      border-radius: 15px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    /* About Preview Section */
+    .about-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .about-text .section-title {
+      text-align: left;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-description {
+      font-size: 1.125rem;
+      line-height: 1.7;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 2rem;
+    }
+
+    .about-features {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      color: rgba(255, 255, 255, 0.9);
+      font-weight: 500;
+    }
+
+    .feature-item svg {
+      color: rgba(102, 126, 234, 0.8);
+      flex-shrink: 0;
+    }
+
+    /* Profile Card */
+    .about-visual {
+      display: flex;
+      justify-content: center;
+    }
+
+    .profile-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 25px;
+      padding: 2.5rem;
+      text-align: center;
+      animation: float 8s ease-in-out infinite;
+      max-width: 300px;
+      width: 100%;
+    }
+
+    .profile-avatar {
+      margin-bottom: 1.5rem;
+    }
+
+    .avatar-placeholder {
+      width: 80px;
+      height: 80px;
+      background: rgba(102, 126, 234, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      color: white;
+    }
+
+    .profile-name {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .profile-title {
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .profile-stats {
+      display: flex;
+      justify-content: space-around;
+      gap: 1rem;
+    }
+
+    .profile-stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: white;
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 0.25rem;
+      display: block;
+    }
+
+    /* 暗色主题适配 */
+    html.dark .section-title,
+    html.dark .hero-title,
+    html.dark .post-title,
+    html.dark .profile-name {
+      color: var(--text-color);
+    }
+
+    html.dark .section-subtitle,
+    html.dark .hero-subtitle,
+    html.dark .about-description {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    html.dark .btn-outline {
+      color: var(--text-color);
+      border-color: rgba(102, 126, 234, 0.3);
+    }
+
+    html.dark .btn-outline:hover {
+      background: rgba(102, 126, 234, 0.1);
+      border-color: rgba(102, 126, 234, 0.5);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 1024px) {
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        text-align: center;
+      }
+
+      .hero-title {
+        font-size: 3rem;
+      }
+
+      .about-content {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        text-align: center;
+      }
+
+      .about-text .section-title {
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+      }
+
+      .hero-title {
+        font-size: 2.5rem;
+      }
+
+      .hero-subtitle {
+        font-size: 1.125rem;
+      }
+
+      .hero-stats {
+        justify-content: center;
+        gap: 1.5rem;
+      }
+
+      .hero-actions {
+        justify-content: center;
+      }
+
+      .section-title {
+        font-size: 2rem;
+      }
+
+      .posts-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+      }
+
+      .post-card {
+        margin: 0 0.5rem;
+      }
+
+      .tags-cloud {
+        gap: 0.75rem;
+      }
+
+      .tag-bubble {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+      }
+
+      .floating-card {
+        padding: 1.5rem;
+      }
+
+      .code-snippet {
+        min-width: 250px;
+      }
+
+      .profile-card {
+        padding: 2rem;
+      }
+
+      .latest-posts-section,
+      .tags-section,
+      .about-preview-section {
+        padding: 3rem 0;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+
+      .hero-content {
+        padding: 1rem;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        font-size: 0.875rem;
+      }
+
+      .post-link {
+        padding: 1.5rem;
+      }
+
+      .post-title {
+        font-size: 1.25rem;
+      }
+
+      .floating-card {
+        padding: 1rem;
+      }
+
+      .code-snippet {
+        min-width: 200px;
+      }
+
+      .code-body {
+        padding: 1rem;
+        font-size: 0.75rem;
+      }
+    }
+
+    /* 动画优化 */
+    @media (prefers-reduced-motion: reduce) {
+      .floating-card,
+      .profile-card {
+        animation: none;
+      }
+
+      .post-card,
+      .tag-bubble {
+        animation: none;
+        opacity: 1;
+        transform: none;
+      }
+    }
+  </LoadingTransition>
+
+  <style>
+
+  <script>
+    import "../utils/i18n-client.js";
+  </script>
 </BaseLayout>
