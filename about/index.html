@@ -1,0 +1,287 @@
+<!DOCTYPE html><html lang="zh-cn" data-astro-cid-37fxchfa> <head><meta charset="utf-8"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><meta name="viewport" content="width=device-width"><meta name="generator" content="Astro v5.12.8"><title>About Meng | 我的 Astro 博客</title><!-- 立即应用主题，防止闪烁 --><script>
+      (function () {
+        const getTheme = () => {
+          if (typeof localStorage !== "undefined") {
+            const stored = localStorage.getItem("theme");
+            if (stored && ["dark", "light"].includes(stored)) {
+              return stored;
+            }
+          }
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+        };
+
+        const theme = getTheme();
+        document.documentElement.classList.toggle("dark", theme === "dark");
+
+        // 存储主题设置
+        if (typeof localStorage !== "undefined") {
+          localStorage.setItem("theme", theme);
+        }
+      })();
+    </script><!-- 预设样式防止闪烁 --><style>.glass-container{position:relative;z-index:10;pointer-events:auto;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;border:none;border-radius:1rem;padding:2rem;margin:0 auto 2rem;transition:all .3s ease;box-shadow:none;width:65vw;max-width:65vw;box-sizing:border-box}html.dark .glass-container{background:transparent;border:none;box-shadow:none}.glass-card{background:#ffffff0f;backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);border-radius:1rem;padding:2rem;transition:all .3s ease;transform:translateY(0);position:relative;box-shadow:0 4px 16px #0000000f}html.dark .glass-card{background:#ffffff08;border-color:#ffffff0f;box-shadow:0 4px 16px #0000001f}.glass-card:hover{transform:translateY(-2px);box-shadow:0 8px 24px #0000001a;background:#ffffff14;border-color:#ffffff2e}html.dark .glass-card:hover{background:#ffffff0a;border-color:#ffffff1a;box-shadow:0 8px 24px #0003}.glass-tag{display:inline-flex;align-items:center;gap:.3rem;padding:.4rem .8rem;background:#ffffff14;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.15);border-radius:9999px;color:var(--text-color);font-size:.85rem;font-weight:500;text-decoration:none;transition:all .25s ease;user-select:none}html.dark .glass-tag{background:#ffffff0a;border-color:#ffffff14}.glass-tag:hover{background:#ffffff1f;border-color:#fff3;transform:translateY(-1px);box-shadow:0 4px 12px #00000014}html.dark .glass-tag:hover{background:#ffffff0f;border-color:#ffffff1f;box-shadow:0 4px 12px #00000026}.star-border-tag{position:relative;display:inline-block;border-radius:20px;overflow:hidden;margin:.25rem;transition:all .3s ease}.star-border-tag:before,.star-border-tag:after{content:"";position:absolute;width:300%;height:50%;opacity:.7;border-radius:50%;z-index:0;transition:opacity .3s ease}.star-border-tag:before{background:radial-gradient(circle,#66b3ff,transparent 10%);bottom:-12px;right:-250%;animation:star-movement-bottom 6s linear infinite alternate}.star-border-tag:after{background:radial-gradient(circle,#66b3ff,transparent 10%);top:-12px;left:-250%;animation:star-movement-top 6s linear infinite alternate}.star-border-tag:hover:before,.star-border-tag:hover:after{opacity:1}.star-border-tag .tag-content{position:relative;border:1px solid rgba(255,255,255,.2);background:#ffffff1a;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:var(--text-color);font-size:.9rem;font-weight:500;text-align:center;padding:.6rem 1.2rem;border-radius:20px;z-index:1;transition:all .3s ease;text-decoration:none;display:block}html.dark .star-border-tag .tag-content{background:#ffffff0d;border-color:#ffffff1a}.star-border-tag:hover .tag-content{background:#ffffff26;border-color:#ffffff4d;transform:translateY(-2px)}html.dark .star-border-tag:hover .tag-content{background:#ffffff14;border-color:#ffffff26}@keyframes star-movement-bottom{0%{transform:translate(0);opacity:1}to{transform:translate(-100%);opacity:0}}@keyframes star-movement-top{0%{transform:translate(0);opacity:1}to{transform:translate(100%);opacity:0}}@media (max-width: 1200px){.glass-container{width:75vw;max-width:75vw}}@media (max-width: 768px){.glass-container{width:95vw;max-width:95vw;padding:1.5rem;border-radius:.75rem}.glass-card{padding:1.5rem;border-radius:.75rem}.star-border-tag{margin:.2rem}.star-border-tag .tag-content{padding:.5rem 1rem;font-size:.85rem}}@media (max-width: 480px){.glass-container{width:98vw;max-width:98vw;padding:1rem}}
+.loading-overlay{position:fixed;top:0;left:0;width:100vw;height:100vh;background:linear-gradient(135deg,#1a1a1af2,#282828fa,#1a1a1af2);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:1;transition:opacity .5s ease-out}.loading-overlay.fade-out{opacity:0}.loading-content{display:flex;flex-direction:column;align-items:center;gap:2rem;text-align:center}.loading-animation{position:relative;display:flex;align-items:center;justify-content:center}.loading-image{width:120px;height:120px;object-fit:contain;border-radius:50%;animation:float 3s ease-in-out infinite;filter:drop-shadow(0 8px 16px rgba(102,126,234,.3));z-index:2;position:relative}.loading-spinner{position:absolute;width:140px;height:140px;border:3px solid rgba(102,126,234,.1);border-top:3px solid rgba(102,126,234,.8);border-radius:50%;animation:spin 1.5s linear infinite;z-index:1}.loading-text{color:#ffffffe6;font-size:1.1rem;font-weight:500;margin:0;animation:pulse 2s ease-in-out infinite;letter-spacing:.5px}.page-content{opacity:1;transform:translateY(0);transition:all .6s ease-out;position:relative;z-index:1}.page-content.fade-in{animation:fadeInUp .8s ease-out}.page-content-hidden{opacity:0;pointer-events:none;position:absolute;top:0;left:0;width:100%;z-index:-1}@keyframes float{0%,to{transform:translateY(0) scale(1)}50%{transform:translateY(-10px) scale(1.05)}}@keyframes spin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}@keyframes pulse{0%,to{opacity:.7}50%{opacity:1}}@keyframes fadeInUp{0%{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}html.dark .loading-overlay{background:linear-gradient(135deg,#0a0a0af2,#141414fa,#0a0a0af2)}html.dark .loading-text{color:#fffffff2}html.dark .loading-spinner{border-color:#8b9cf71a;border-top-color:#8b9cf7cc}html.dark .loading-image{filter:drop-shadow(0 8px 16px rgba(139,156,247,.4))}@media (max-width: 768px){.loading-image{width:100px;height:100px}.loading-spinner{width:120px;height:120px}.loading-text{font-size:1rem}.loading-content{gap:1.5rem;padding:0 1rem}}@media (max-width: 480px){.loading-image{width:80px;height:80px}.loading-spinner{width:100px;height:100px}.loading-text{font-size:.9rem}}@media (prefers-reduced-motion: reduce){.loading-image{animation:none}.loading-spinner{animation:spin 3s linear infinite}.loading-text{animation:none;opacity:.9}.page-content.fade-in{animation:none}}
+</style>
+<link rel="stylesheet" href="/_astro/about.B36vRjiL.css">
+<link rel="stylesheet" href="/_astro/post-1.DEo0_p8S.css">
+<style>.darkveil-canvas{width:100vw;height:100vh;display:block;pointer-events:none;position:fixed;top:0;left:0;z-index:-1}
+</style></head> <body class data-astro-cid-37fxchfa> <style>astro-island,astro-slot,astro-static-slot{display:contents}</style><script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).only=e;window.dispatchEvent(new Event("astro:only"));})();</script><script>(()=>{var A=Object.defineProperty;var g=(i,o,a)=>o in i?A(i,o,{enumerable:!0,configurable:!0,writable:!0,value:a}):i[o]=a;var d=(i,o,a)=>g(i,typeof o!="symbol"?o+"":o,a);{let i={0:t=>m(t),1:t=>a(t),2:t=>new RegExp(t),3:t=>new Date(t),4:t=>new Map(a(t)),5:t=>new Set(a(t)),6:t=>BigInt(t),7:t=>new URL(t),8:t=>new Uint8Array(t),9:t=>new Uint16Array(t),10:t=>new Uint32Array(t),11:t=>1/0*t},o=t=>{let[l,e]=t;return l in i?i[l](e):void 0},a=t=>t.map(o),m=t=>typeof t!="object"||t===null?t:Object.fromEntries(Object.entries(t).map(([l,e])=>[l,o(e)]));class y extends HTMLElement{constructor(){super(...arguments);d(this,"Component");d(this,"hydrator");d(this,"hydrate",async()=>{var b;if(!this.hydrator||!this.isConnected)return;let e=(b=this.parentElement)==null?void 0:b.closest("astro-island[ssr]");if(e){e.addEventListener("astro:hydrate",this.hydrate,{once:!0});return}let c=this.querySelectorAll("astro-slot"),n={},h=this.querySelectorAll("template[data-astro-template]");for(let r of h){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("data-astro-template")||"default"]=r.innerHTML,r.remove())}for(let r of c){let s=r.closest(this.tagName);s!=null&&s.isSameNode(this)&&(n[r.getAttribute("name")||"default"]=r.innerHTML)}let p;try{p=this.hasAttribute("props")?m(JSON.parse(this.getAttribute("props"))):{}}catch(r){let s=this.getAttribute("component-url")||"<unknown>",v=this.getAttribute("component-export");throw v&&(s+=` (export ${v})`),console.error(`[hydrate] Error parsing props for component ${s}`,this.getAttribute("props"),r),r}let u;await this.hydrator(this)(this.Component,p,n,{client:this.getAttribute("client")}),this.removeAttribute("ssr"),this.dispatchEvent(new CustomEvent("astro:hydrate"))});d(this,"unmount",()=>{this.isConnected||this.dispatchEvent(new CustomEvent("astro:unmount"))})}disconnectedCallback(){document.removeEventListener("astro:after-swap",this.unmount),document.addEventListener("astro:after-swap",this.unmount,{once:!0})}connectedCallback(){if(!this.hasAttribute("await-children")||document.readyState==="interactive"||document.readyState==="complete")this.childrenConnectedCallback();else{let e=()=>{document.removeEventListener("DOMContentLoaded",e),c.disconnect(),this.childrenConnectedCallback()},c=new MutationObserver(()=>{var n;((n=this.lastChild)==null?void 0:n.nodeType)===Node.COMMENT_NODE&&this.lastChild.nodeValue==="astro:end"&&(this.lastChild.remove(),e())});c.observe(this,{childList:!0}),document.addEventListener("DOMContentLoaded",e)}}async childrenConnectedCallback(){let e=this.getAttribute("before-hydration-url");e&&await import(e),this.start()}async start(){let e=JSON.parse(this.getAttribute("opts")),c=this.getAttribute("client");if(Astro[c]===void 0){window.addEventListener(`astro:${c}`,()=>this.start(),{once:!0});return}try{await Astro[c](async()=>{let n=this.getAttribute("renderer-url"),[h,{default:p}]=await Promise.all([import(this.getAttribute("component-url")),n?import(n):()=>()=>{}]),u=this.getAttribute("component-export")||"default";if(!u.includes("."))this.Component=h[u];else{this.Component=h;for(let f of u.split("."))this.Component=this.Component[f]}return this.hydrator=p,this.hydrate},e,this)}catch(n){console.error(`[astro-island] Error hydrating ${this.getAttribute("component-url")}`,n)}}attributeChangedCallback(){this.hydrate()}}d(y,"observedAttributes",["props"]),customElements.get("astro-island")||customElements.define("astro-island",y)}})();</script><astro-island uid="Zq76hX" component-url="/_astro/ScrollProgress.DzRsv7uE.js" component-export="default" renderer-url="/_astro/client.QTxdrNpD.js" props="{&quot;data-astro-cid-37fxchfa&quot;:[0,true]}" ssr client="only" opts="{&quot;name&quot;:&quot;ScrollProgress&quot;,&quot;value&quot;:&quot;preact&quot;}"></astro-island> <header data-astro-cid-3ef6ksr2> <script>(()=>{var e=async t=>{await(await t())()};(self.Astro||(self.Astro={})).load=e;window.dispatchEvent(new Event("astro:load"));})();</script><astro-island uid="2ciRYz" component-url="/_astro/CardNav.BAA74fwa.js" component-export="default" renderer-url="/_astro/client.QTxdrNpD.js" props="{&quot;logo&quot;:[0,&quot;/favicon.svg&quot;],&quot;logoAlt&quot;:[0,&quot;网站 Logo&quot;],&quot;items&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;首页&quot;],&quot;key&quot;:[0,&quot;home&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;回到首页&quot;],&quot;key&quot;:[0,&quot;backToHome&quot;],&quot;href&quot;:[0,&quot;/&quot;],&quot;ariaLabel&quot;:[0,&quot;回到首页&quot;]}]]]}],[0,{&quot;label&quot;:[0,&quot;博客&quot;],&quot;key&quot;:[0,&quot;blog&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;查看博客&quot;],&quot;key&quot;:[0,&quot;viewBlog&quot;],&quot;href&quot;:[0,&quot;/blog/&quot;],&quot;ariaLabel&quot;:[0,&quot;查看博客&quot;]}]]]}],[0,{&quot;label&quot;:[0,&quot;标签&quot;],&quot;key&quot;:[0,&quot;tags&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;浏览标签&quot;],&quot;key&quot;:[0,&quot;browseTags&quot;],&quot;href&quot;:[0,&quot;/tags/&quot;],&quot;ariaLabel&quot;:[0,&quot;浏览标签&quot;]}]]]}],[0,{&quot;label&quot;:[0,&quot;关于&quot;],&quot;key&quot;:[0,&quot;about&quot;],&quot;links&quot;:[1,[[0,{&quot;label&quot;:[0,&quot;关于本站&quot;],&quot;key&quot;:[0,&quot;aboutSite&quot;],&quot;href&quot;:[0,&quot;/about/&quot;],&quot;ariaLabel&quot;:[0,&quot;关于本站&quot;]}]]]}]]],&quot;menuColor&quot;:[0,&quot;var(--text-color)&quot;],&quot;data-astro-cid-3ef6ksr2&quot;:[0,true]}" ssr client="load" opts="{&quot;name&quot;:&quot;CardNav&quot;,&quot;value&quot;:true}" await-children><div class="card-nav-container  at-top"><nav class="card-nav "><div class="card-nav-top"><div class="card-nav-left"><div class="hamburger-menu " role="button" aria-label="Open menu" tabindex="0" style="color:var(--text-color);"><div class="hamburger-line"></div><div class="hamburger-line"></div></div><a href="/" class="logo-text">Chen</a></div><div class="card-nav-right-actions"><div class="desktop-nav-links"><a href="/blog">博客</a><a href="/about">关于</a></div><a href="/search" aria-label="搜索" class="action-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></a><div class="language-switcher "><button class="language-button" aria-label="Switch language"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" class="language-icon"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 18 15.3 15.3 0 0 1-8 0 15.3 15.3 0 0 1 4-18z"></path></svg><span class="language-text">简体中文</span></button></div><astro-slot> <button id="themeToggle" title="Toggle theme" data-astro-cid-oemx5le4> <svg width="30px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" data-astro-cid-oemx5le4> <g class="sun" data-astro-cid-oemx5le4> <path d="M12 17.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11zm0 1.5a7 7 0 1 0 0-14 7 7 0 0 0 0 14zm12-7a.8.8 0 0 1-.8.8h-2.4a.8.8 0 0 1 0-1.6h2.4a.8.8 0 0 1 .8.8zM4 12a.8.8 0 0 1-.8.8H.8a.8.8 0 0 1 0-1.6h2.5a.8.8 0 0 1 .8.8zm16.5-8.5a.8.8 0 0 1 0 1l-1.8 1.8a.8.8 0 0 1-1-1l1.7-1.8a.8.8 0 0 1 1 0zM6.3 17.7a.8.8 0 0 1 0 1l-1.7 1.8a.8.8 0 1 1-1-1l1.7-1.8a.8.8 0 0 1 1 0zM12 0a.8.8 0 0 1 .8.8v2.5a.8.8 0 0 1-1.6 0V.8A.8.8 0 0 1 12 0zm0 20a.8.8 0 0 1 .8.8v2.4a.8.8 0 0 1-1.6 0v-2.4a.8.8 0 0 1 .8-.8zM3.5 3.5a.8.8 0 0 1 1 0l1.8 1.8a.8.8 0 1 1-1 1L3.5 4.6a.8.8 0 0 1 0-1zm14.2 14.2a.8.8 0 0 1 1 0l1.8 1.7a.8.8 0 0 1-1 1l-1.8-1.7a.8.8 0 0 1 0-1z" data-astro-cid-oemx5le4></path> </g> <g class="moon" data-astro-cid-oemx5le4> <path d="M16.5 6A10.5 10.5 0 0 1 4.7 16.4 8.5 8.5 0 1 0 16.4 4.7l.1 1.3zm-1.7-2a9 9 0 0 1 .2 2 9 9 0 0 1-11 8.8 9.4 9.4 0 0 1-.8-.3c-.4 0-.8.3-.7.7a10 10 0 0 0 .3.8 10 10 0 0 0 9.2 6 10 10 0 0 0 4-19.2 9.7 9.7 0 0 0-.9-.3c-.3-.1-.7.3-.6.7a9 9 0 0 1 .3.8z" data-astro-cid-oemx5le4></path> </g> <g class="system" data-astro-cid-oemx5le4> <path d="M19 3a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-4v1h1a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h1v-1H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm-6 15h-2v1h2zm6-13H5v11h14z" data-astro-cid-oemx5le4></path> </g> </svg> </button>  <script>
+  const THEMES = ["light", "dark", "auto"];
+  const doc = document.documentElement;
+
+  const getPreferredTheme = () => {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light";
+  };
+
+  const applyTheme = (theme) => {
+    if (theme === "auto") {
+      const preferredTheme = getPreferredTheme();
+      doc.classList.toggle("dark", preferredTheme === "dark");
+    } else {
+      doc.classList.toggle("dark", theme === "dark");
+    }
+    doc.setAttribute("data-theme-mode", theme);
+    localStorage.setItem("theme", theme);
+  };
+
+  const cycleTheme = () => {
+    const currentTheme = localStorage.getItem("theme") || "auto";
+    const currentIndex = THEMES.indexOf(currentTheme);
+    const nextIndex = (currentIndex + 1) % THEMES.length;
+    const nextTheme = THEMES[nextIndex];
+    applyTheme(nextTheme);
+  };
+
+  // Apply initial theme on page load
+  const initialTheme = localStorage.getItem("theme") || "auto";
+  applyTheme(initialTheme);
+
+  // Listen for system theme changes
+  window
+    .matchMedia("(prefers-color-scheme: dark)")
+    .addEventListener("change", () => {
+      if (localStorage.getItem("theme") === "auto") {
+        applyTheme("auto");
+      }
+    });
+
+  // Add click listener
+  document.getElementById("themeToggle")?.addEventListener("click", cycleTheme);
+</script> </astro-slot></div></div><div class="card-nav-content" aria-hidden="true"><div class="nav-card"><div class="nav-card-label">首页</div><div class="nav-card-links"><a class="nav-card-link" href="/" aria-label="回到首页"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="nav-card-link-icon" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M6 18L18 6M18 6v12M18 6H6"></path></svg>回到首页</a></div></div><div class="nav-card"><div class="nav-card-label">博客</div><div class="nav-card-links"><a class="nav-card-link" href="/blog/" aria-label="查看博客"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="nav-card-link-icon" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M6 18L18 6M18 6v12M18 6H6"></path></svg>查看博客</a></div></div><div class="nav-card"><div class="nav-card-label">标签</div><div class="nav-card-links"><a class="nav-card-link" href="/tags/" aria-label="浏览标签"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="nav-card-link-icon" aria-hidden="true" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0z"></path><path d="M6 18L18 6M18 6v12M18 6H6"></path></svg>浏览标签</a></div></div></div></nav></div><!--astro:end--></astro-island> </header>  <main data-astro-cid-37fxchfa>   <div style="width: 100%; height: 100vh; position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none;; --skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;" data-astro-cid-kh7btl4r> <astro-island uid="hO3RK" component-url="/_astro/DarkVeil.BzPUIerF.js" component-export="default" renderer-url="/_astro/client.QTxdrNpD.js" props="{&quot;data-astro-cid-kh7btl4r&quot;:[0,true]}" ssr client="only" opts="{&quot;name&quot;:&quot;DarkVeil&quot;,&quot;value&quot;:&quot;preact&quot;}"></astro-island> </div>  <astro-island uid="Z1rex0Y" component-url="/_astro/LoadingTransition.CLq5uMuv.js" component-export="default" renderer-url="/_astro/client.QTxdrNpD.js" props="{&quot;loadingText&quot;:[0,&quot;正在加载关于页面...&quot;],&quot;minLoadingTime&quot;:[0,500],&quot;data-astro-cid-kh7btl4r&quot;:[0,true]}" ssr client="only" opts="{&quot;name&quot;:&quot;LoadingTransition&quot;,&quot;value&quot;:&quot;preact&quot;}" await-children><template data-astro-template> <div class="glass-container" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <div class="header-section" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <h1 data-i18n="about.title" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">About Meng</h1> <p class="subtitle" data-i18n="about.subtitle" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">了解更多关于我的信息</p> </div> <div class="content-sections" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <section class="glass-card" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <h2 data-i18n="about.personalIntro" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">个人介绍</h2> <p data-i18n="about.personalIntroText1" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">
+I'm Meng，live in China，and I'm still
+            a Uni Student。
+</p> <p data-i18n="about.personalIntroText2" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">
+我正在学习 Astro
+            的入门教程。这是我网站上的第二个页面，也是我自己建立的第一个页面！
+</p> </section> <section class="glass-card" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <h2 data-i18n="about.techStack" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">技术栈</h2> <div class="skills" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <div class="skill-item" style="animation-delay: 0s; --skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;" data-astro-cid-kh7btl4r> HTML </div><div class="skill-item" style="animation-delay: 0.1s; --skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;" data-astro-cid-kh7btl4r> CSS </div><div class="skill-item" style="animation-delay: 0.2s; --skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;" data-astro-cid-kh7btl4r> JavaScript </div><div class="skill-item" style="animation-delay: 0.30000000000000004s; --skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;" data-astro-cid-kh7btl4r> Python </div><div class="skill-item" style="animation-delay: 0.4s; --skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;" data-astro-cid-kh7btl4r> Matlab </div> </div> </section> <!-- Statistic 统计信息 --> <div class="statistics" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <div class="stat-item" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <div class="stat-icon" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></path> <polyline points="14,2 14,8 20,8" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></polyline> <line x1="16" y1="13" x2="8" y2="13" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></line> <line x1="16" y1="17" x2="8" y2="17" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></line> <polyline points="10,9 9,9 8,9" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></polyline> </svg> </div> <div class="stat-label" data-i18n="about.wordCount" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">字数</div> <div class="stat-value" id="site-words" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">—</div> </div> <div class="stat-item" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <div class="stat-icon" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <circle cx="12" cy="12" r="10" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></circle> <polyline points="12,6 12,12 16,14" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></polyline> </svg> </div> <div class="stat-label" data-i18n="about.onlineTime" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">开发时间</div> <div class="stat-value" id="online-time" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">—</div> </div> <div class="stat-item" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <div class="stat-icon" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <rect x="3" y="4" width="18" height="18" rx="2" ry="2" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></rect> <line x1="16" y1="2" x2="16" y2="6" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></line> <line x1="8" y1="2" x2="8" y2="6" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></line> <line x1="3" y1="10" x2="21" y2="10" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></line> </svg> </div> <div class="stat-label" data-i18n="about.lastUpdated" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">最后更新</div> <div class="stat-value" id="last-updated" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">—</div> </div> </div> <div class="degree-progress" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <div class="degree-info" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <span data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">今年进度</span> <span id="degree-percent" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">0%</span> </div> <div class="progress-bar" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <div class="progress-fill" id="degree-fill" style="width:0%; --skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;" data-astro-cid-kh7btl4r></div> </div> </div> </div> </div>  <div class="contributions-full-width" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <!-- GitHub 贡献热力图 --> <div class="contributions-section" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <h3 data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <svg class="platform-icon" viewBox="0 0 24 24" fill="currentColor" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></path> </svg> <span data-i18n="about.githubContributions" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">GitHub 贡献</span> </h3> <div class="calendar-container" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <astro-island uid="1EfMuJ" component-url="/_astro/GitHubCalendar.CF56tpts.js" component-export="default" renderer-url="/_astro/client.QTxdrNpD.js" props="{&quot;username&quot;:[0,&quot;yuchen-06&quot;],&quot;data-astro-cid-kh7btl4r&quot;:[0,true]}" ssr client="load" opts="{&quot;name&quot;:&quot;GitHubCalendarComponent&quot;,&quot;value&quot;:true}" await-children><div style="width:100%;min-height:150px;display:flex;align-items:center;justify-content:center;color:rgba(255, 255, 255, 0.9);"><div style="color:rgba(255, 255, 255, 0.7);">正在加载 GitHub 贡献数据...</div></div><!--astro:end--></astro-island> </div> </div> <!-- GitLab 贡献热力图 --> <div class="contributions-section" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <h3 data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <svg class="platform-icon" xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 32 32" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <path fill="#e53935" d="m29.532 13.083l-.037-.105l-3.811-10.322a1 1 0 0 0-.392-.49a.985.985 0 0 0-1.39.316a1 1 0 0 0-.122.28L21.208 10H10.792L8.22 2.762a1.004 1.004 0 0 0-1.246-.721a1 1 0 0 0-.266.124a1 1 0 0 0-.392.491L2.507 12.98l-.04.103a7.52 7.52 0 0 0 2.348 8.491l.015.012l.032.026l5.797 4.511l2.876 2.257l1.747 1.372a1.146 1.146 0 0 0 1.424 0l1.747-1.372l2.876-2.257l5.838-4.537l.016-.013a7.52 7.52 0 0 0 2.35-8.49Z" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></path> <path fill="#ef6c00" d="m29.532 13.083l-.037-.105a12.6 12.6 0 0 0-5.123 2.394l-8.367 6.57l5.327 4.181l5.839-4.537l.016-.013a7.52 7.52 0 0 0 2.345-8.49" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></path> <path fill="#f9a825" d="m10.659 26.123l2.876 2.257l1.747 1.372a1.146 1.146 0 0 0 1.424 0l1.747-1.372l2.876-2.257L16 21.943Z" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></path> <path fill="#ef6c00" d="M7.628 15.371a12.6 12.6 0 0 0-5.12-2.39l-.04.102a7.52 7.52 0 0 0 2.347 8.491l.015.012l.032.026l5.797 4.511l5.331-4.18Z" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></path> </svg> <span data-i18n="about.gitlabContributions" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">GitLab 贡献</span> </h3> <div class="calendar-container" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <astro-island uid="Z2tyXas" component-url="/_astro/GitLabCalendar.DpMb32Hf.js" component-export="default" renderer-url="/_astro/client.QTxdrNpD.js" props="{&quot;data-astro-cid-kh7btl4r&quot;:[0,true]}" ssr client="only" opts="{&quot;name&quot;:&quot;GitLabCalendar&quot;,&quot;value&quot;:&quot;preact&quot;}"></astro-island> </div> </div> </div>  <div class="glass-container" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <div class="section-content" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <h2 class="section-title" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <circle cx="12" cy="12" r="10" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></circle> <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></path> <path d="M12 17h.01" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></path> </svg> <span data-i18n="about.copyrightStatement" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">版权声明</span> </h2> <div class="copyright-content" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <p data-i18n="about.copyrightIntro" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">
+这里是我的个人Blog，用来记录日常的学习与生活、分享一些有趣的资源、
+            写写周记什么的，并且之后会记录科研路上的思考与收获。
+</p> <p data-i18n="about.copyrightLicense" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">
+站点中的原创内容采用 <strong data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">CC BY-NC 4.0</strong> 协议进行分享， 欢迎你在非商业用途下自由转载和分享，只需标注一下来源就好。
+            我觉得好的内容就应该被更多人看到，这样才有价值。
+</p> <p data-i18n="about.copyrightIcons" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">
+网站使用的图标资源来自 <a href="https://yesicon.app/" target="_blank" rel="noopener noreferrer" class="tech-link" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">YesIcon</a>， 感谢他们提供的优质图标库。如果你发现任何版权问题，
+            请随时联系我，我会及时处理。
+</p> </div> </div> </div>  <div class="glass-container" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <div class="section-content" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <h2 class="section-title" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <polyline points="16 18 22 12 16 6" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></polyline> <polyline points="8 6 2 12 8 18" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"></polyline> </svg> <span data-i18n="about.techStackAndResources" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">技术栈与资源</span> </h2> <div class="tech-content" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;"> <h3 data-i18n="about.frameworkAndTech" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">框架与技术</h3> <p data-i18n="about.frameworkDesc" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">
+本站基于 <a href="https://astro.build/" target="_blank" rel="noopener noreferrer" class="tech-link" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">Astro</a> 框架构建， 这是一个静态站点生成器。站点采用响应式设计， 支持多种前端技术栈的集成，包括
+<a href="https://react.dev/" target="_blank" rel="noopener noreferrer" class="tech-link" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">React</a>、<a href="https://preactjs.com/" target="_blank" rel="noopener noreferrer" class="tech-link" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">Preact</a> 等组件库。
+</p> <h3 data-i18n="about.designResources" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">设计资源</h3> <p data-i18n="about.designDesc" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">
+站点的UI组件和设计灵感主要参考了 <a href="https://reactbits.dev/" target="_blank" rel="noopener noreferrer" class="tech-link" data-astro-cid-kh7btl4r style="--skillColor: lightblue;--fontWeight: bold;--textCase: uppercase;">React Bits</a>
+的优秀样式资源。
+</p> </div> </div> </div> </template><!--astro:end--></astro-island>  <script>(function(){const totalWordCount = 472;
+
+    document.addEventListener("DOMContentLoaded", function () {
+      // GitLab 热力图现在由组件处理
+
+      // 显示博客字数统计（使用服务端计算的真实字数）
+      function displayWordCount() {
+        try {
+          // 从服务端获取的真实字数
+          const actualWords = totalWordCount;
+
+          const element = document.getElementById("site-words");
+          if (element) {
+            if (actualWords > 0) {
+              // 添加动画效果
+              let currentCount = 0;
+              const increment = actualWords / 50;
+              const timer = setInterval(() => {
+                currentCount += increment;
+                if (currentCount >= actualWords) {
+                  currentCount = actualWords;
+                  clearInterval(timer);
+                }
+                element.textContent = `${Math.floor(currentCount).toLocaleString()}字`;
+              }, 30);
+            } else {
+              element.textContent = "—";
+            }
+          }
+        } catch (error) {
+          console.error("显示字数失败:", error);
+          const element = document.getElementById("site-words");
+          if (element) {
+            element.textContent = "—";
+          }
+        }
+      }
+
+      // 统计信息：字数（真实计算）、开发时间（运行计时）、最后更新
+      // 最后更新时间将在下面的开发时间统计中设置
+
+      // 延迟显示字数，避免阻塞页面加载
+      setTimeout(displayWordCount, 500);
+
+      // 在线时间累计功能 - 修改为开发环境运行时间统计
+      const STORAGE_KEY = "blog_dev_time";
+      const SESSION_KEY = "blog_dev_session_start";
+      const LAST_UPDATE_KEY = "blog_last_update";
+
+      // 初始化：从9小时开始计时（之前的开发时间）
+      const INITIAL_HOURS = 9;
+      let totalOnlineMinutes = parseInt(
+        localStorage.getItem(STORAGE_KEY) || (INITIAL_HOURS * 60).toString(),
+      );
+
+      // 如果是第一次访问，设置初始值
+      if (!localStorage.getItem(STORAGE_KEY)) {
+        localStorage.setItem(STORAGE_KEY, (INITIAL_HOURS * 60).toString());
+        totalOnlineMinutes = INITIAL_HOURS * 60;
+      }
+
+      // 记录本次开发会话开始时间
+      let sessionStart = Date.now();
+      sessionStorage.setItem(SESSION_KEY, sessionStart.toString());
+
+      // 注意：不在页面加载时更新 LAST_UPDATE_KEY，避免“最后更新”总是显示当前时间
+
+      function updateOnlineTime() {
+        // 计算本次开发会话时间
+        const currentSessionMinutes = Math.floor(
+          (Date.now() - sessionStart) / (1000 * 60),
+        );
+
+        // 总开发时间 = 历史累计 + 本次会话
+        const totalMinutes = totalOnlineMinutes + currentSessionMinutes;
+
+        const days = Math.floor(totalMinutes / (24 * 60));
+        const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
+        const minutes = totalMinutes % 60;
+
+        const onlineTimeElement = document.getElementById("online-time");
+        if (onlineTimeElement) {
+          if (days > 0) {
+            onlineTimeElement.textContent = `${days}天 ${hours}小时`;
+          } else if (hours > 0) {
+            onlineTimeElement.textContent = `${hours}小时 ${minutes}分钟`;
+          } else {
+            onlineTimeElement.textContent = `${minutes}分钟`;
+          }
+        }
+
+        // 更新最后更新时间显示
+        const lastUpdatedElement = document.getElementById("last-updated");
+        if (lastUpdatedElement) {
+          const savedLastUpdate = localStorage.getItem(LAST_UPDATE_KEY);
+          if (savedLastUpdate) {
+            lastUpdatedElement.textContent = savedLastUpdate;
+          } else {
+            // 如果没有保存的时间，使用当前时间
+            const fallbackTime = new Date().toLocaleString("zh-CN", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              hour12: false,
+            });
+            lastUpdatedElement.textContent = fallbackTime;
+            localStorage.setItem(LAST_UPDATE_KEY, fallbackTime);
+          }
+        }
+
+        // 每分钟更新一次
+        setTimeout(updateOnlineTime, 60000);
+      }
+
+      // 页面卸载时保存累计开发时间
+      window.addEventListener("beforeunload", function () {
+        const sessionMinutes = Math.floor(
+          (Date.now() - sessionStart) / (1000 * 60),
+        );
+        const newTotal = totalOnlineMinutes + sessionMinutes;
+        localStorage.setItem(STORAGE_KEY, newTotal.toString());
+
+        // 更新最后更新时间
+        const updateTime = new Date().toLocaleString("zh-CN", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        });
+        localStorage.setItem(LAST_UPDATE_KEY, updateTime);
+      });
+
+      // 页面可见性变化时也保存（处理标签页切换等情况）
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) {
+          const sessionMinutes = Math.floor(
+            (Date.now() - sessionStart) / (1000 * 60),
+          );
+          const newTotal = totalOnlineMinutes + sessionMinutes;
+          localStorage.setItem(STORAGE_KEY, newTotal.toString());
+          totalOnlineMinutes = newTotal;
+
+          // 更新最后更新时间
+          const updateTime = new Date().toLocaleString("zh-CN", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: false,
+          });
+          localStorage.setItem(LAST_UPDATE_KEY, updateTime);
+
+          // 重置会话开始时间
+          const newSessionStart = Date.now();
+          sessionStorage.setItem(SESSION_KEY, newSessionStart.toString());
+          sessionStart = newSessionStart;
+        }
+      });
+
+      updateOnlineTime();
+
+      // 今年进度（计算今年已过去的百分比）
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      const yearStart = new Date(currentYear, 0, 1).getTime(); // 今年1月1日
+      const yearEnd = new Date(currentYear + 1, 0, 1).getTime(); // 明年1月1日
+      const currentTime = now.getTime();
+
+      const yearPercent = Math.max(
+        0,
+        Math.min(
+          100,
+          ((currentTime - yearStart) / (yearEnd - yearStart)) * 100,
+        ),
+      );
+
+      const degreePercentElement = document.getElementById("degree-percent");
+      const degreeFillElement = document.getElementById("degree-fill");
+      if (degreePercentElement) {
+        degreePercentElement.textContent = `${yearPercent.toFixed(1)}%`;
+      }
+      if (degreeFillElement) {
+        degreeFillElement.style.width = `${yearPercent}%`;
+      }
+    });
+  })();</script> <script type="module" src="/_astro/about.astro_astro_type_script_index_0_lang.Br1yUjOU.js"></script>  </main> <footer data-astro-cid-sz7xmlte> <a href="https://www.instagram.com/meng.httttttp" aria-label="Instagram" data-astro-cid-yxtifmrq><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-yxtifmrq><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" color="currentColor" data-astro-cid-yxtifmrq><path d="M2.5 12c0-4.478 0-6.718 1.391-8.109S7.521 2.5 12 2.5c4.478 0 6.718 0 8.109 1.391S21.5 7.521 21.5 12c0 4.478 0 6.718-1.391 8.109S16.479 21.5 12 21.5c-4.478 0-6.718 0-8.109-1.391S2.5 16.479 2.5 12" data-astro-cid-yxtifmrq></path><path d="M16.5 12a4.5 4.5 0 1 1-9 0a4.5 4.5 0 0 1 9 0m1.008-5.5h-.01" data-astro-cid-yxtifmrq></path></g></svg></a> <a href="https://github.com/yuchen-06" aria-label="GitHub" data-astro-cid-yxtifmrq><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-yxtifmrq><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" color="currentColor" data-astro-cid-yxtifmrq><path d="M10 20.568c-3.429 1.157-6.286 0-8-3.568" data-astro-cid-yxtifmrq></path><path d="M10 22v-3.242c0-.598.184-1.118.48-1.588c.204-.322.064-.78-.303-.88C7.134 15.452 5 14.107 5 9.645c0-1.16.38-2.25 1.048-3.2c.166-.236.25-.354.27-.46c.02-.108-.015-.247-.085-.527c-.283-1.136-.264-2.343.16-3.43c0 0 .877-.287 2.874.96c.456.285.684.428.885.46s.469-.035 1.005-.169A9.5 9.5 0 0 1 13.5 3a9.6 9.6 0 0 1 2.343.28c.536.134.805.2 1.006.169c.2-.032.428-.175.884-.46c1.997-1.247 2.874-.96 2.874-.96c.424 1.087.443 2.294.16 3.43c-.07.28-.104.42-.084.526s.103.225.269.461c.668.95 1.048 2.04 1.048 3.2c0 4.462-2.134 5.807-5.177 6.643c-.367.101-.507.559-.303.88c.296.47.48.99.48 1.589V22" data-astro-cid-yxtifmrq></path></g></svg></a> <a href="https://git.henau.edu.cn/Chen" aria-label="GitLab" data-astro-cid-yxtifmrq><svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-yxtifmrq><path fill="currentColor" d="m21.94 13.11l-1.05-3.22c0-.03-.01-.06-.02-.09l-2.11-6.48a.86.86 0 0 0-.8-.57c-.36 0-.68.25-.79.58l-2 6.17H8.84L6.83 3.33a.85.85 0 0 0-.79-.58c-.37 0-.69.25-.8.58L3.13 9.82v.01l-1.07 3.28c-.16.5.01 1.04.44 1.34l9.22 6.71c.17.12.39.12.56-.01l9.22-6.7c.43-.3.6-.84.44-1.34M8.15 10.45l2.57 7.91l-6.17-7.91m8.73 7.92l2.47-7.59l.1-.33h3.61l-5.59 7.16m4.1-13.67l1.81 5.56h-3.62m-1.3.95l-1.79 5.51L12 19.24l-2.86-8.79M6.03 3.94L7.84 9.5H4.23m-1.18 4.19c-.09-.07-.13-.19-.09-.29l.79-2.43l5.82 7.45m11.38-4.73l-6.51 4.73l.02-.03l5.79-7.42l.79 2.43c.04.1 0 .22-.09.29" data-astro-cid-yxtifmrq></path></svg></a> <a href="/rss.xml" aria-label="RSS" data-astro-cid-yxtifmrq><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" data-astro-cid-yxtifmrq><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 19a1 1 0 1 0 2 0a1 1 0 1 0-2 0M4 4a16 16 0 0 1 16 16M4 11a9 9 0 0 1 9 9" data-astro-cid-yxtifmrq></path></svg></a> </footer>  </body></html>
