@@ -1,151 +1,148 @@
 import { useEffect, useRef } from 'preact/hooks';
 
 const GitLabCalendar = ({
-  username = "Chen",
-  gitlabUrl = "https://git.henau.edu.cn",
-  accessToken = "", // Personal Access Token
-  fallbackToDemo = true // 是否在失败时显示演示数据
+  username = import.meta.env.PUBLIC_GITLAB_USERNAME || "Chen",
+  gitlabUrl = import.meta.env.PUBLIC_GITLAB_URL || "https://git.henau.edu.cn",
+  accessToken = import.meta.env.PUBLIC_GITLAB_ACCESS_TOKEN || "" // Personal Access Token - 从环境变量获取
 }) => {
   const containerRef = useRef(null);
 
-  useEffect(() => {
-    const loadGitLabData = async () => {
-      const cacheKey = `gitlab_data_${username}`;
-      const cacheTimeKey = `gitlab_data_time_${username}`;
-      const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24小时缓存
+  const loadGitLabData = async () => {
+    const cacheKey = `gitlab_data_${username}`;
+    const cacheTimeKey = `gitlab_data_time_${username}`;
+    const CACHE_DURATION = 6 * 60 * 60 * 1000; // 6小时缓存，更频繁更新
+    try {
+      // 检查缓存
+      const cachedData = localStorage.getItem(cacheKey);
+      const cacheTime = localStorage.getItem(cacheTimeKey);
 
-      try {
-        // 检查缓存
-        const cachedData = localStorage.getItem(cacheKey);
-        const cacheTime = localStorage.getItem(cacheTimeKey);
-
-        if (cachedData && cacheTime) {
-          const isExpired = Date.now() - parseInt(cacheTime) > CACHE_DURATION;
-          if (!isExpired) {
-            console.log('Using cached GitLab data');
-            const data = JSON.parse(cachedData);
-            if (containerRef.current) {
-              renderCalendar(data, containerRef.current);
-              return;
-            }
-          }
-        }
-
-        // 设置认证头
-        const headers = {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        };
-
-        if (accessToken) {
-          headers['PRIVATE-TOKEN'] = accessToken;
-          console.log('Using Personal Access Token for GitLab API');
-        } else {
-          console.log('No access token provided, trying public API');
-        }
-
-        const fetchOptions = {
-          headers,
-          mode: 'cors',
-          credentials: 'omit'
-        };
-
-        // 获取用户ID
-        console.log('Fetching GitLab user info...');
-        const userApiUrl = `${gitlabUrl}/api/v4/users?username=${username}`;
-        const userResponse = await fetch(userApiUrl, fetchOptions);
-
-        if (!userResponse.ok) {
-          throw new Error(`Failed to fetch user info: ${userResponse.status} ${userResponse.statusText}`);
-        }
-
-        const users = await userResponse.json();
-        if (!users || users.length === 0) {
-          throw new Error('User not found');
-        }
-
-        const userId = users[0].id;
-        console.log(`Found GitLab user ID: ${userId}`);
-
-        // 获取用户事件数据
-        console.log('Fetching GitLab events...');
-        const eventsApiUrl = `${gitlabUrl}/api/v4/users/${userId}/events`;
-        const oneYearAgo = new Date();
-        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-
-        let allEvents = [];
-        let page = 1;
-        const perPage = 100;
-
-        // 获取多页数据
-        while (page <= 5) { // 最多5页，避免过多请求
-          const eventsUrl = `${eventsApiUrl}?after=${oneYearAgo.toISOString()}&per_page=${perPage}&page=${page}`;
-          console.log(`Fetching page ${page}...`);
-
-          const eventsResponse = await fetch(eventsUrl, fetchOptions);
-
-          if (!eventsResponse.ok) {
-            if (page === 1) {
-              throw new Error(`Failed to fetch events: ${eventsResponse.status} ${eventsResponse.statusText}`);
-            } else {
-              console.log(`Page ${page} failed, stopping pagination`);
-              break;
-            }
-          }
-
-          const pageEvents = await eventsResponse.json();
-          if (!pageEvents || pageEvents.length === 0) {
-            console.log(`Page ${page} returned no events, stopping pagination`);
-            break;
-          }
-
-          allEvents = allEvents.concat(pageEvents);
-          console.log(`Page ${page}: ${pageEvents.length} events`);
-          page++;
-
-          // 如果返回的数据少于perPage，说明已经是最后一页
-          if (pageEvents.length < perPage) {
-            console.log('Reached last page');
-            break;
-          }
-
-          // 添加小延迟避免请求过快
-          await new Promise(resolve => setTimeout(resolve, 100));
-        }
-
-        console.log(`Total events fetched: ${allEvents.length}`);
-
-        // 处理数据生成贡献图数据
-        const contributionData = processEventsToContributions(allEvents);
-
-        // 缓存数据
-        localStorage.setItem(cacheKey, JSON.stringify(contributionData));
-        localStorage.setItem(cacheTimeKey, Date.now().toString());
-        console.log('GitLab data cached successfully');
-
-        if (containerRef.current) {
-          renderCalendar(contributionData, containerRef.current);
-        }
-      } catch (error) {
-        console.error('GitLab API access failed:', error.message);
-
-        // 尝试使用过期的缓存数据
-        const cachedData = localStorage.getItem(cacheKey);
-        if (cachedData && containerRef.current) {
-          console.log('Using cached GitLab data as fallback');
+      if (cachedData && cacheTime) {
+        const isExpired = Date.now() - parseInt(cacheTime) > CACHE_DURATION;
+        if (!isExpired) {
+          console.log('Using cached GitLab data');
           const data = JSON.parse(cachedData);
-          renderCalendar(data, containerRef.current);
-        } else if (fallbackToDemo && containerRef.current) {
-          // 显示演示数据（模拟真实的GitLab贡献模式）
-          console.log('Using demo GitLab data as fallback');
-          renderDemoCalendar(containerRef.current);
-        } else if (containerRef.current) {
-          // 显示简洁的提示信息
-          renderUnavailableMessage(containerRef.current);
+          if (containerRef.current) {
+            renderCalendar(data, containerRef.current);
+            return;
+          }
         }
       }
-    };
 
+      // 设置认证头
+      const headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      };
+
+      if (accessToken) {
+        headers['PRIVATE-TOKEN'] = accessToken;
+        console.log('Using Personal Access Token for GitLab API');
+      } else {
+        console.log('No access token provided, trying public API');
+      }
+
+      const fetchOptions = {
+        headers,
+        mode: 'cors',
+        credentials: 'omit'
+      };
+
+      // 获取用户ID
+      console.log('Fetching GitLab user info...');
+      const userApiUrl = `${gitlabUrl}/api/v4/users?username=${username}`;
+      const userResponse = await fetch(userApiUrl, fetchOptions);
+
+      if (!userResponse.ok) {
+        throw new Error(`Failed to fetch user info: ${userResponse.status} ${userResponse.statusText}`);
+      }
+
+      const users = await userResponse.json();
+      if (!users || users.length === 0) {
+        throw new Error('User not found');
+      }
+
+      const userId = users[0].id;
+      console.log(`Found GitLab user ID: ${userId}`);
+
+      // 获取用户事件数据
+      console.log('Fetching GitLab events...');
+      const eventsApiUrl = `${gitlabUrl}/api/v4/users/${userId}/events`;
+      const oneYearAgo = new Date();
+      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+
+      // 添加时间戳参数强制刷新
+      const timestamp = Date.now();
+
+      let allEvents = [];
+      let page = 1;
+      const perPage = 100;
+
+      // 获取多页数据
+      while (page <= 10) { // 增加到10页获取更多数据
+        const eventsUrl = `${eventsApiUrl}?after=${oneYearAgo.toISOString()}&per_page=${perPage}&page=${page}&_t=${timestamp}`;
+        console.log(`Fetching page ${page}...`);
+
+        const eventsResponse = await fetch(eventsUrl, fetchOptions);
+
+        if (!eventsResponse.ok) {
+          if (page === 1) {
+            throw new Error(`Failed to fetch events: ${eventsResponse.status} ${eventsResponse.statusText}`);
+          } else {
+            console.log(`Page ${page} failed, stopping pagination`);
+            break;
+          }
+        }
+
+        const pageEvents = await eventsResponse.json();
+        if (!pageEvents || pageEvents.length === 0) {
+          console.log(`Page ${page} returned no events, stopping pagination`);
+          break;
+        }
+
+        allEvents = allEvents.concat(pageEvents);
+        console.log(`Page ${page}: ${pageEvents.length} events`);
+        page++;
+
+        // 如果返回的数据少于perPage，说明已经是最后一页
+        if (pageEvents.length < perPage) {
+          console.log('Reached last page');
+          break;
+        }
+
+        // 添加小延迟避免请求过快
+        await new Promise(resolve => setTimeout(resolve, 100));
+      }
+
+      console.log(`Total events fetched: ${allEvents.length}`);
+
+      // 处理数据生成贡献图数据
+      const contributionData = processEventsToContributions(allEvents);
+
+      // 缓存数据
+      localStorage.setItem(cacheKey, JSON.stringify(contributionData));
+      localStorage.setItem(cacheTimeKey, Date.now().toString());
+      console.log('GitLab data cached successfully');
+
+      if (containerRef.current) {
+        renderCalendar(contributionData, containerRef.current);
+      }
+    } catch (error) {
+      console.error('GitLab API access failed:', error.message);
+
+      // 尝试使用过期的缓存数据
+      const cachedData = localStorage.getItem(cacheKey);
+      if (cachedData && containerRef.current) {
+        console.log('Using cached GitLab data as fallback');
+        const data = JSON.parse(cachedData);
+        renderCalendar(data, containerRef.current);
+      } else if (containerRef.current) {
+        // 显示简洁的提示信息
+        renderUnavailableMessage(containerRef.current);
+      }
+    }
+  };
+
+  useEffect(() => {
     loadGitLabData();
   }, [username, gitlabUrl, accessToken]);
 
@@ -171,10 +168,12 @@ const GitLabCalendar = ({
 
       // 只统计有意义的贡献事件
       const contributionActions = [
-        'pushed', 'opened', 'closed', 'merged', 'commented on', 'created'
+        'pushed', 'opened', 'closed', 'merged', 'commented', 'created', 'updated', 'approved'
       ];
 
-      if (contributionActions.some(action => event.action_name.includes(action))) {
+      if (event.action_name && contributionActions.some(action => 
+        event.action_name.toLowerCase().includes(action.toLowerCase())
+      )) {
         const currentCount = contributionMap.get(dateStr) || 0;
         contributionMap.set(dateStr, currentCount + 1);
       }
@@ -316,50 +315,6 @@ const GitLabCalendar = ({
     container.innerHTML = calendarHTML;
   };
 
-  // 渲染演示数据（模拟真实的GitLab贡献模式）
-  const renderDemoCalendar = (container) => {
-    // 生成模拟的贡献数据，模拟真实的开发模式
-    const contributions = [];
-    const today = new Date();
-    let totalCount = 0;
-
-    for (let i = 364; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-
-      // 模拟真实的开发模式：工作日更多贡献，周末较少
-      const dayOfWeek = date.getDay();
-      const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
-      const isWorkday = !isWeekend;
-
-      let count = 0;
-      if (isWorkday) {
-        // 工作日：70%概率有贡献，1-8次贡献
-        if (Math.random() < 0.7) {
-          count = Math.floor(Math.random() * 8) + 1;
-        }
-      } else {
-        // 周末：30%概率有贡献，1-3次贡献
-        if (Math.random() < 0.3) {
-          count = Math.floor(Math.random() * 3) + 1;
-        }
-      }
-
-      totalCount += count;
-      contributions.push({
-        date: date.toISOString().split('T')[0],
-        count,
-        level: count === 0 ? 0 : Math.min(Math.ceil(count / 2), 4)
-      });
-    }
-
-    const demoData = {
-      contributions,
-      total: { lastYear: totalCount }
-    };
-
-    renderCalendar(demoData, container);
-  };
 
   // 渲染简洁的不可用提示
   const renderUnavailableMessage = (container) => {

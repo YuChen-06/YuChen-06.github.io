@@ -244,10 +244,6 @@ const textCase = "uppercase";
         <div class="calendar-container">
           <GitLabCalendar
             client:only="preact"
-            username="Chen"
-            gitlabUrl="https://git.henau.edu.cn"
-            accessToken=""
-            fallbackToDemo={true}
           />
         </div>
       </div>
@@ -1325,20 +1321,10 @@ const textCase = "uppercase";
       }
 
       // 记录本次开发会话开始时间
-      const sessionStart = Date.now();
+      let sessionStart = Date.now();
       sessionStorage.setItem(SESSION_KEY, sessionStart.toString());
 
-      // 更新最后更新时间为当前时间
-      const lastUpdateTime = new Date().toLocaleString("zh-CN", {
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-      });
-      localStorage.setItem(LAST_UPDATE_KEY, lastUpdateTime);
+      // 注意：不在页面加载时更新 LAST_UPDATE_KEY，避免“最后更新”总是显示当前时间
 
       function updateOnlineTime() {
         // 计算本次开发会话时间
@@ -1436,6 +1422,7 @@ const textCase = "uppercase";
           // 重置会话开始时间
           const newSessionStart = Date.now();
           sessionStorage.setItem(SESSION_KEY, newSessionStart.toString());
+          sessionStart = newSessionStart;
         }
       });
 
