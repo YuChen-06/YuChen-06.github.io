@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import DotGrid from "../../components/Backgrounds/DotGrid.jsx";
+import DarkVeil from "../../components/Backgrounds/DarkVeil.jsx";
 import "../../styles/GlassContainer.css";
 
 export async function getStaticPaths() {
@@ -26,21 +26,19 @@ const { posts } = Astro.props;
 ---
 
 <BaseLayout pageTitle={`标签：${tag}`}>
-  <!-- DotGrid 背景效果 -->
+  <!-- DarkVeil 背景效果 -->
   <div
     style="width: 100%; height: 100vh; position: fixed; top: 0; left: 0; z-index: -1;"
   >
-    <DotGrid
+    <DarkVeil
       client:only="preact"
-      dotSize={6}
-      gap={15}
-      baseColor="transparent"
-      activeColor="transparent"
-      proximity={120}
-      shockRadius={250}
-      shockStrength={5}
-      resistance={750}
-      returnDuration={1.5}
+      hueShift={0}
+      noiseIntensity={0.1}
+      scanlineIntensity={0}
+      speed={1.0}
+      scanlineFrequency={0}
+      warpAmount={2.0}
+      resolutionScale={1}
     />
   </div>
 
