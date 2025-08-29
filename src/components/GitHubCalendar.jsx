@@ -7,29 +7,27 @@ const GitHubCalendarComponent = ({ username = "yuchen-06" }) => {
     const loadGitHubData = async () => {
       const cacheKey = `github_data_${username}`;
       const cacheTimeKey = `github_data_time_${username}`;
-      const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24小时缓存
+      const CACHE_DURATION = 5 * 60 * 1000; // 5分钟缓存，确保数据新鲜
 
       try {
-        // 检查缓存
-        const cachedData = localStorage.getItem(cacheKey);
-        const cacheTime = localStorage.getItem(cacheTimeKey);
-
-        if (cachedData && cacheTime) {
-          const isExpired = Date.now() - parseInt(cacheTime) > CACHE_DURATION;
-          if (!isExpired) {
-            console.log('Using cached GitHub data');
-            const data = JSON.parse(cachedData);
-            if (containerRef.current) {
-              renderCalendar(data, containerRef.current);
-              return;
-            }
-          }
-        }
-
-        // 获取新数据
+        // 强制刷新：清除旧缓存以获取最新数据
         console.log('Fetching fresh GitHub data...');
-        const apiUrl = `https://github-contributions-api.jogruber.de/v4/${username}?y=last`;
-        const response = await fetch(apiUrl);
+        localStorage.removeItem(cacheKey);
+        localStorage.removeItem(cacheTimeKey);
+
+        // 添加时间戳和随机数强制刷新，绕过所有缓存
+        const timestamp = Date.now();
+        const randomId = Math.random().toString(36).substring(7);
+        const apiUrl = `https://github-contributions-api.jogruber.de/v4/${username}?y=last&_t=${timestamp}&_r=${randomId}&_cache_bust=${Date.now()}`;
+        
+        const response = await fetch(apiUrl, {
+          cache: 'no-cache',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0'
+          }
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}: Failed to fetch GitHub data`);

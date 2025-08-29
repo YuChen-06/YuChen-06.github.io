@@ -32,11 +32,11 @@ export default defineConfig({
         '@': new URL('./src', import.meta.url).pathname,
       },
     },
-    // 定义环境变量前缀，使其在客户端可用
+    // 定义环境变量，使其在客户端可用
     define: {
-      'import.meta.env.PUBLIC_GITLAB_ACCESS_TOKEN': JSON.stringify(process.env.GITLAB_ACCESS_TOKEN || ''),
-      'import.meta.env.PUBLIC_GITLAB_URL': JSON.stringify(process.env.GITLAB_URL || 'https://git.henau.edu.cn'),
-      'import.meta.env.PUBLIC_GITLAB_USERNAME': JSON.stringify(process.env.GITLAB_USERNAME || 'Chen'),
+      'process.env.GITLAB_ACCESS_TOKEN': JSON.stringify(process.env.GITLAB_ACCESS_TOKEN || ''),
+      'process.env.GITLAB_URL': JSON.stringify(process.env.GITLAB_URL || 'https://git.henau.edu.cn'),
+      'process.env.GITLAB_USERNAME': JSON.stringify(process.env.GITLAB_USERNAME || 'Chen'),
     },
   },
 

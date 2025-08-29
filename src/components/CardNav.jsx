@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from "preact/hooks";
 import { gsap } from "gsap";
-import { useLanguage, LanguageSwitcher } from "../hooks/useLanguage.js";
+import { useLanguage, LanguageSwitcher } from "../hooks/useLanguage.jsx";
 
 const GoArrowUpRight = () => (
   <svg

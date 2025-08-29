@@ -1,32 +1,28 @@
 import { useEffect, useRef } from 'preact/hooks';
 
 const GitLabCalendar = ({
-  username = import.meta.env.PUBLIC_GITLAB_USERNAME || "Chen",
-  gitlabUrl = import.meta.env.PUBLIC_GITLAB_URL || "https://git.henau.edu.cn",
-  accessToken = import.meta.env.PUBLIC_GITLAB_ACCESS_TOKEN || "" // Personal Access Token - 从环境变量获取
+  username = process.env.GITLAB_USERNAME || "Chen",
+  gitlabUrl = process.env.GITLAB_URL || "https://git.henau.edu.cn",
+  accessToken = process.env.GITLAB_ACCESS_TOKEN || "" // Personal Access Token - 从环境变量获取
 }) => {
+  // 调试环境变量
+  console.log('Environment variables:', {
+    GITLAB_ACCESS_TOKEN: process.env.GITLAB_ACCESS_TOKEN ? 'SET' : 'NOT SET',
+    GITLAB_URL: process.env.GITLAB_URL,
+    GITLAB_USERNAME: process.env.GITLAB_USERNAME
+  });
   const containerRef = useRef(null);
 
   const loadGitLabData = async () => {
     const cacheKey = `gitlab_data_${username}`;
     const cacheTimeKey = `gitlab_data_time_${username}`;
-    const CACHE_DURATION = 6 * 60 * 60 * 1000; // 6小时缓存，更频繁更新
+    const CACHE_DURATION = 5 * 60 * 1000; // 5分钟缓存，确保数据新鲜
+    
     try {
-      // 检查缓存
-      const cachedData = localStorage.getItem(cacheKey);
-      const cacheTime = localStorage.getItem(cacheTimeKey);
-
-      if (cachedData && cacheTime) {
-        const isExpired = Date.now() - parseInt(cacheTime) > CACHE_DURATION;
-        if (!isExpired) {
-          console.log('Using cached GitLab data');
-          const data = JSON.parse(cachedData);
-          if (containerRef.current) {
-            renderCalendar(data, containerRef.current);
-            return;
-          }
-        }
-      }
+      // 强制刷新：清除旧缓存以获取最新数据
+      console.log('Fetching fresh GitLab data...');
+      localStorage.removeItem(cacheKey);
+      localStorage.removeItem(cacheTimeKey);
 
       // 设置认证头
       const headers = {
@@ -70,8 +66,9 @@ const GitLabCalendar = ({
       const oneYearAgo = new Date();
       oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
 
-      // 添加时间戳参数强制刷新
+      // 添加时间戳和随机数强制刷新，绕过所有缓存
       const timestamp = Date.now();
+      const randomId = Math.random().toString(36).substring(7);
 
       let allEvents = [];
       let page = 1;
@@ -79,8 +76,8 @@ const GitLabCalendar = ({
 
       // 获取多页数据
       while (page <= 10) { // 增加到10页获取更多数据
-        const eventsUrl = `${eventsApiUrl}?after=${oneYearAgo.toISOString()}&per_page=${perPage}&page=${page}&_t=${timestamp}`;
-        console.log(`Fetching page ${page}...`);
+        const eventsUrl = `${eventsApiUrl}?after=${oneYearAgo.toISOString()}&per_page=${perPage}&page=${page}&_t=${timestamp}&_r=${randomId}&_cache_bust=${Date.now()}`;
+        console.log(`Fetching fresh page ${page}...`);
 
         const eventsResponse = await fetch(eventsUrl, fetchOptions);
 
