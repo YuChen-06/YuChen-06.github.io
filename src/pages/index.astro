@@ -1124,9 +1124,5 @@ const popularTags = Object.entries(allTags)
     }
   </LoadingTransition>
 
-  <style>
-
-  <script>
-    import "../utils/i18n-client.js";
-  </script>
+  <script type="module" src={Astro.resolve("../utils/i18n-client.js")}></script>
 </BaseLayout>
